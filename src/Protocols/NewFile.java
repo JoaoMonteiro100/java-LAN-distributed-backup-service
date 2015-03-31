@@ -1,9 +1,12 @@
+package Protocols;
 import java.io.File;
+
+import Protocols.Utilities;
 
 //class of file to be handled
 public class NewFile extends File {
 	//TODO: generate ID (combine metadata with content, for example -- using SHA256)
-	private char[] id = new char[32];
+	private String id = new String();
 	//each file can have up to 1 million chunks
 	private Chunk[] chunks = new Chunk[1000000];
 	//desired replication degree, propagated to chunks
@@ -14,11 +17,10 @@ public class NewFile extends File {
 	public NewFile(String name, byte[] content, int repDegree) throws Throwable {
 		super(name);
 		this.replicationDegree = repDegree;
-		//dividir content por chunks
-		//SHA256
+		id = Utilities.hashing(name);
 	}
 	
-	public char[] getID() {
+	public String getID() {
 		return this.id;
 	}
 	
