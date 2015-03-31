@@ -12,6 +12,7 @@ public class Receiver implements Runnable{
 	
 	final static String INET_ADDR = "224.0.0.3";
     final static int PORT = 8888;
+    final static int C_PORT = 8889;
 
 	@Override
 	public void run() {
@@ -41,7 +42,11 @@ public class Receiver implements Runnable{
                 	if (out != null) 
                 		out.close();
                 }
-                System.out.println("File part succesfully wrote on disk");
+                String response = "File part " + i + " succesfully wrote on disk";
+                byte [] ola = response.getBytes();
+                DatagramPacket pacote = new DatagramPacket(ola,
+	            		ola.length, address, C_PORT);
+                clientSocket.send(pacote);
             }
         } catch (IOException ex) {
           ex.printStackTrace();
