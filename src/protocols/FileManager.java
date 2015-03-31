@@ -1,4 +1,4 @@
-package Protocols;
+package protocols;
 import java.util.ArrayList;
 
 public class FileManager {

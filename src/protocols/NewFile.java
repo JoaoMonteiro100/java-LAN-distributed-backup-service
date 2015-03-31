@@ -1,7 +1,7 @@
-package Protocols;
+package protocols;
 import java.io.File;
 
-import Protocols.Utilities;
+import protocols.Utilities;
 
 //class of file to be handled
 public class NewFile extends File {

@@ -1,4 +1,4 @@
-package Protocols;
+package protocols;
 import java.util.Arrays;
 
 //class of a chunk (part of a file)
