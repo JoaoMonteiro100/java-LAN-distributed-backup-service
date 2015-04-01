@@ -1,3 +1,4 @@
+package protocols;
 import java.io.UnsupportedEncodingException;
 
 public class Message {
