@@ -6,11 +6,11 @@ public class Message {
 	private byte[] header = {0};
 	private byte[] body = {0};
 	
-	String messageType = "";
-	double version = 0.0;
-	char[] fileId = {'0'};
-	byte[] chunkNo = {0};
-	int replicationDeg = 0;
+	private String messageType = "";
+	private double version = 0.0;
+	private char[] fileId = {'0'};
+	private byte[] chunkNo = {0};
+	private int replicationDeg = 0;
 	
 	//message with all elements (ex: PUTCHUNK)
 	public Message(String messageType, double version, char[] fileId, byte[] chunkNo, int replicationDeg, char[] content) throws UnsupportedEncodingException {
