@@ -2,11 +2,13 @@ package protocols;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.file.Files;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class Backup implements Runnable{
@@ -18,13 +20,13 @@ public class Backup implements Runnable{
 	@Override
 	public void run() {
 		
-        try (DatagramSocket serverSocket = new DatagramSocket()) {
+        try (MulticastSocket serverSocket = new MulticastSocket()) {
         	
-        	MulticastSocket clientSocket = new MulticastSocket(C_PORT);
+        	//MulticastSocket clientSocket = new MulticastSocket(C_PORT);
         	
         	InetAddress addr = InetAddress.getByName(INET_ADDR);
         	
-        	clientSocket.joinGroup(addr);
+        	//clientSocket.joinGroup(addr);
            
         	File fi = new File("C:\\Users\\Miguel Tavares\\Pictures\\lol.dib");
         	byte[] fileContent = Files.readAllBytes(fi.toPath());
@@ -33,23 +35,31 @@ public class Backup implements Runnable{
         	
         	for(int i = 0; i < chunks.length; i++)
         	{
-	            DatagramPacket msgPacket = new DatagramPacket(chunks[i],
-	            		chunks[i].length, addr, PORT);
+        		String fileID = Utilities.hashing("lol.dib"); //	public Message(String messageType, double version, char[] fileId, byte[] chunkNo, int replicationDeg, char[] content) throws UnsupportedEncodingException {
+
+        		char[] fileIDchar = fileID.toCharArray();
+        		Message msg = new Message("PUTCHUNK", 1.0, fileIDchar, i, 1, chunks[i]);
+        		
+        		byte [] pot = msg.getEntireMessage();
+	            DatagramPacket msgPacket = new DatagramPacket(pot,
+	            		pot.length, addr, PORT);
 	            
 	            serverSocket.send(msgPacket);
 	 
 	            System.out.println("Sent part number" + i);
 	            
-	            byte [] ola = new byte [50];
+	            /*byte [] ola = new byte [50];
 	            DatagramPacket pacote = new DatagramPacket(ola, ola.length);
                 clientSocket.receive(pacote);
                 String ok = new String(ola);
-                System.out.println(ok);
+                System.out.println(ok);*/
                 
                 Thread.sleep(500);
-            }        	
+            }
+        	
+        	//clientSocket.close();
             
-        } catch (IOException | InterruptedException ex) {
+        } catch (IOException | InterruptedException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
         }
 		

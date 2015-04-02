@@ -10,7 +10,7 @@ import java.net.MulticastSocket;
 
 public class Receiver implements Runnable{
 	
-	final static String INET_ADDR = "224.0.0.3";
+	final static String INET_ADDR_MC = "224.0.0.3";
     final static int PORT = 8888;
     final static int C_PORT = 8889;
 
@@ -19,7 +19,7 @@ public class Receiver implements Runnable{
 		 
         try (MulticastSocket clientSocket = new MulticastSocket(PORT)){
         	
-        	InetAddress address = InetAddress.getByName(INET_ADDR);
+        	InetAddress address = InetAddress.getByName(INET_ADDR_MC);
             
             clientSocket.joinGroup(address);
             
@@ -31,7 +31,7 @@ public class Receiver implements Runnable{
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 clientSocket.receive(msgPacket);
                 
-                String filename = "chunk" + i + ".part"; 
+                /*String filename = "chunk" + i + ".part"; 
                 
                 OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
                 
@@ -42,11 +42,12 @@ public class Receiver implements Runnable{
                 	if (out != null) 
                 		out.close();
                 }
+                
                 String response = "File part " + i + " succesfully wrote on disk";
                 byte [] ola = response.getBytes();
                 DatagramPacket pacote = new DatagramPacket(ola,
 	            		ola.length, address, C_PORT);
-                clientSocket.send(pacote);
+                clientSocket.send(pacote);*/
             }
         } catch (IOException ex) {
           ex.printStackTrace();

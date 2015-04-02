@@ -14,12 +14,12 @@ public class Message {
 	private int replicationDeg = 0;
 	
 	//message with all elements (ex: PUTCHUNK)
-	public Message(String messageType, double version, char[] fileId, byte[] chunkNo, int replicationDeg, char[] content) throws UnsupportedEncodingException {
+	public Message(String messageType, double version, char[] fileId, int chunkNo, int replicationDeg, byte[] content) throws UnsupportedEncodingException {
 		String ver = Double.toString(version);
 		String fId = new String(fileId);
-		String cNo = new String(chunkNo, "UTF-8");
+		String cNo = Integer.toString(chunkNo);
 		String repDegree = new Integer(replicationDeg).toString();
-		String cont = new String(content);
+		//String cont = new String(content);
 		
 		int cr = 13; //carriage return
 		int lf = 10; //new line
@@ -29,8 +29,8 @@ public class Message {
 		
 		String concatenatedHeader = messageType + space + ver + space + fId + space + cNo + space + repDegree + space + crlf + crlf;
 		
-		header = concatenatedHeader.getBytes("US_ASCII");
-		body = cont.getBytes("US_ASCII");
+		header = concatenatedHeader.getBytes();
+		body = content;
 		
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
@@ -39,11 +39,11 @@ public class Message {
 	}
 	
 	//message without 'replicationDeg' (ex: STORED, GETCHUNK, CHUNK, REMOVED)
-	public Message(String messageType, double version, char[] fileId, byte[] chunkNo, char[] content) throws UnsupportedEncodingException {
+	public Message(String messageType, double version, char[] fileId, int chunkNo, byte[] content) throws UnsupportedEncodingException {
 		String ver = Double.toString(version);
 		String fId = new String(fileId);
-		String cNo = new String(chunkNo, "UTF-8");
-		String cont = new String(content);
+		String cNo = Integer.toString(chunkNo);
+		//String cont = new String(content);
 		
 		int cr = 13; //carriage return
 		int lf = 10; //new line
@@ -53,8 +53,8 @@ public class Message {
 		
 		String concatenatedHeader = messageType + space + ver + space + fId + space + cNo + space + crlf + crlf;
 		
-		header = concatenatedHeader.getBytes("US_ASCII");
-		body = cont.getBytes("US_ASCII");
+		header = concatenatedHeader.getBytes();
+		body = content;
 		
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
@@ -63,10 +63,10 @@ public class Message {
 	}
 	
 	//message without 'replicationDeg' and 'chunkNo' (ex: DELETE)
-	public Message(String messageType, double version, char[] fileId, char[] content) throws UnsupportedEncodingException {
+	public Message(String messageType, double version, char[] fileId, byte[] content) throws UnsupportedEncodingException {
 		String ver = Double.toString(version);
 		String fId = new String(fileId);
-		String cont = new String(content);
+		//String cont = new String(content);
 		
 		int cr = 13; //carriage return
 		int lf = 10; //new line
@@ -76,8 +76,8 @@ public class Message {
 		
 		String concatenatedHeader = messageType + space + ver + space + fId + space + crlf + crlf;
 		
-		header = concatenatedHeader.getBytes("US_ASCII");
-		body = cont.getBytes("US_ASCII");
+		header = concatenatedHeader.getBytes();
+		body = content;
 		
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
@@ -171,4 +171,14 @@ public class Message {
 	public void setReplicationDeg(int replicationDeg) {
 		this.replicationDeg = replicationDeg;
 	}
+
+	public byte[] getEntireMessage() {
+		return entireMessage;
+	}
+
+	public void setEntireMessage(byte[] entireMessage) {
+		this.entireMessage = entireMessage;
+	}
+	
+	
 }
