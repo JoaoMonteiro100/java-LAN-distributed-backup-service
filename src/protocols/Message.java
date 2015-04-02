@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 public class Message {
 	private byte[] header = {0};
 	private byte[] body = {0};
+	private byte[] entireMessage = {0};
 	
 	private String messageType = "";
 	private double version = 0.0;
@@ -30,6 +31,11 @@ public class Message {
 		
 		header = concatenatedHeader.getBytes("US_ASCII");
 		body = cont.getBytes("US_ASCII");
+		
+		//concatenation of header + body in entireMessage
+		entireMessage = new byte[header.length + body.length];
+		System.arraycopy(header, 0, entireMessage, 0, header.length);
+		System.arraycopy(body, 0, entireMessage, header.length, body.length);
 	}
 	
 	//message without 'replicationDeg' (ex: STORED, GETCHUNK, CHUNK, REMOVED)
@@ -49,6 +55,11 @@ public class Message {
 		
 		header = concatenatedHeader.getBytes("US_ASCII");
 		body = cont.getBytes("US_ASCII");
+		
+		//concatenation of header + body in entireMessage
+		entireMessage = new byte[header.length + body.length];
+		System.arraycopy(header, 0, entireMessage, 0, header.length);
+		System.arraycopy(body, 0, entireMessage, header.length, body.length);
 	}
 	
 	//message without 'replicationDeg' and 'chunkNo' (ex: DELETE)
@@ -67,6 +78,11 @@ public class Message {
 		
 		header = concatenatedHeader.getBytes("US_ASCII");
 		body = cont.getBytes("US_ASCII");
+		
+		//concatenation of header + body in entireMessage
+		entireMessage = new byte[header.length + body.length];
+		System.arraycopy(header, 0, entireMessage, 0, header.length);
+		System.arraycopy(body, 0, entireMessage, header.length, body.length);
 	}
 	
 	//message with no discernible elements (ex: received message to be interpreted)
@@ -93,6 +109,11 @@ public class Message {
 		String[] splitBody = messageStr.split("\\r\\n\\r\\n"); //CRLF CRLF divides de body from the header
 		header = splitBody[0].getBytes(Charset.forName("UTF-8"));
 		body = splitBody[1].getBytes(Charset.forName("UTF-8"));
+		
+		//concatenation of header + body in entireMessage
+		entireMessage = new byte[header.length + body.length];
+		System.arraycopy(header, 0, entireMessage, 0, header.length);
+		System.arraycopy(body, 0, entireMessage, header.length, body.length);
 	}
 
 	public byte[] getHeader() {
