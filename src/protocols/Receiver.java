@@ -1,6 +1,7 @@
 package protocols;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,6 +9,7 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class Receiver implements Runnable{
 	
@@ -29,25 +31,33 @@ public class Receiver implements Runnable{
             
             clientSocket.joinGroup(address);
             
-            byte[] buf = new byte[1000000];
+            byte[] buf = new byte[65000];
+            
+            String fileID = Utilities.hashing("lol.dib");
+            new File(fileID).mkdir();
      
             int i = 0;
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 clientSocket.receive(msgPacket);
                 
-                String filename = "chunk" + i + ".part"; 
+                byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
+                
+                Message got = new Message (msg);
+                
+                String filename = fileID + "\\" + "chunk" + i + ".part"; 
+                
                 
                 OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
                 
                 try {                    
-                    out.write(buf);
+                    out.write(got.getBody());
                 } 
                 finally {
                 	if (out != null) 
                 		out.close();
                 }
-                String fileID = Utilities.hashing("lol.dib");
+                
                 byte [] empty = new byte[0];
         		char[] fileIDchar = fileID.toCharArray();
         		
@@ -69,6 +79,5 @@ public class Receiver implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 }

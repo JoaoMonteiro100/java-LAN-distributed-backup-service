@@ -87,7 +87,7 @@ public class Message {
 	
 	//message with no discernible elements (ex: received message to be interpreted)
 	public Message(byte[] message) throws UnsupportedEncodingException {
-		String messageStr = new String(message, "UTF-8");
+		String messageStr = new String(message);
 		String[] splitMessage = messageStr.split("\\s"); //the spaces divide the components of the message
 		
 		//common elements to all messages
@@ -107,8 +107,8 @@ public class Message {
 		
 		//TODO: CONFIRMAR SE FUNCIONA ASSIM!!!
 		String[] splitBody = messageStr.split("\\r\\n\\r\\n"); //CRLF CRLF divides de body from the header
-		header = splitBody[0].getBytes(Charset.forName("UTF-8"));
-		body = splitBody[1].getBytes(Charset.forName("UTF-8"));
+		header = splitBody[0].getBytes();
+		body = splitBody[1].getBytes();
 		
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
