@@ -1,7 +1,6 @@
 package protocols;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import org.apache.commons.codec.binary.Base64;
 
 public class Message {
 	private byte[] header = {0};
@@ -30,7 +29,7 @@ public class Message {
 		
 		String concatenatedHeader = messageType + space + ver + space + fId + space + cNo + space + repDegree + space + crlf + crlf;
 		
-		header = Base64.encodeBase64(concatenatedHeader.getBytes());
+		header = concatenatedHeader.getBytes();
 		body = content;
 		
 		//concatenation of header + body in entireMessage
@@ -54,7 +53,7 @@ public class Message {
 		
 		String concatenatedHeader = messageType + space + ver + space + fId + space + cNo + space + crlf + crlf;
 		
-		header = Base64.encodeBase64(concatenatedHeader.getBytes());
+		header = concatenatedHeader.getBytes();
 		body = content;
 		
 		//concatenation of header + body in entireMessage
@@ -77,7 +76,7 @@ public class Message {
 		
 		String concatenatedHeader = messageType + space + ver + space + fId + space + crlf + crlf;
 		
-		header = Base64.encodeBase64(concatenatedHeader.getBytes());
+		header = concatenatedHeader.getBytes();
 		body = content;
 		
 		//concatenation of header + body in entireMessage
@@ -108,8 +107,8 @@ public class Message {
 		
 		//TODO: CONFIRMAR SE FUNCIONA ASSIM!!!
 		String[] splitBody = messageStr.split("\\r\\n\\r\\n"); //CRLF CRLF divides de body from the header
-		header = Base64.decodeBase64(splitBody[0].getBytes());
-		body = Base64.decodeBase64(splitBody[1].getBytes());
+		header = splitBody[0].getBytes();
+		body = splitBody[1].getBytes();
 		
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
