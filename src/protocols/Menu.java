@@ -29,24 +29,49 @@ public class Menu {
 	    System.out.print("How much space do you want to allocate in memory (in GB) for chunks?");
 	    space = answer2.nextDouble();
 	}
-
-	//function to change space allocated for chunks
-	public void updateMemory() {
-	    Scanner answer = new Scanner( System.in );
-	    System.out.print("Do you want to update the space allocated for backup chunks (Y/N)?");
-	    char choice = answer.next().charAt(0);
-	    
-	    if (choice == 'Y' || choice == 'y') {
-		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("How much space do you want to allocate for memory (in GB)?");
-		    space = answer2.nextDouble();
-	    }
-	}
 	
 	//function to run when the program starts
 	public void start() {
 		connectionData();
 		fileData();
+	}
+	
+	public String whatNext() {
+		Scanner answer = new Scanner( System.in );
+	    System.out.print("What do you want to do? Backup (B), Restore (R), Delete (D) or Reallocate space (S)?");
+	    char choice = answer.next().charAt(0);
+	    
+	    //if backup
+	    if (choice == 'B' || choice == 'b') {
+		    Scanner answer2 = new Scanner( System.in );
+		    System.out.print("What file do you want to backup? (Write directory)");
+		    return("BACKUP "+answer.nextLine());
+	    }
+	    
+	    //if restore
+	    else if (choice == 'R' || choice == 'r') {
+		    Scanner answer2 = new Scanner( System.in );
+		    System.out.print("Which file do you want to restore? (Write ID)");
+		    return("RESTORE "+answer.nextLine());
+	    }
+	    
+	    //if delete
+	    else if (choice == 'D' || choice == 'd') {
+		    Scanner answer2 = new Scanner( System.in );
+		    System.out.print("Which file do you want to restore? (Write ID)");
+		    return("DELETE "+answer.nextLine());
+	    }
+	    
+	    //if reallocate
+	    else if (choice == 'S' || choice == 's') {
+		    Scanner answer2 = new Scanner( System.in );
+		    System.out.print("How much space do you want to allocate for memory (in GB)?");
+		    return("REALLOCATE "+answer.nextLine());
+	    }
+	    
+	    //default
+	    else
+	    	return("");
 	}
 
 	//Gets & Sets
