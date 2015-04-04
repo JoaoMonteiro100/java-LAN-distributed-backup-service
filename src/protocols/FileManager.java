@@ -9,7 +9,7 @@ public class FileManager {
 	private ArrayList<Integer> modified_files = new ArrayList<Integer>();
 	
 	//...
-	//se ficheiro for modificado, mudar a versão dele (ex: 1.0 -> 2.0)
+	//VERSÃO RELACIONADA COM ENHANCEMENTS QUE FIZERMOS, 1.0 por default
 	
 	//tem que interpretar headers de mensagens e invocar a classe apropriada para esse protocolo
 	//ex: lê "backup" e chama uma função da classe Backup
