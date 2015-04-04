@@ -108,8 +108,11 @@ public class Message {
 		//TODO: CONFIRMAR SE FUNCIONA ASSIM!!!
 		String[] splitBody = messageStr.split("\\r\\n\\r\\n"); //CRLF CRLF divides de body from the header
 		header = splitBody[0].getBytes();
-		body = splitBody[1].getBytes();
 		
+		body = new byte [splitBody[1].length()];
+		
+		System.arraycopy(message, splitBody[0].length()+4, body, 0, splitBody[1].length());
+				
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
 		System.arraycopy(header, 0, entireMessage, 0, header.length);

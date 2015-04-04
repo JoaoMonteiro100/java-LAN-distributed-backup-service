@@ -97,20 +97,16 @@ public class Backup implements Runnable{
 	    return result;
 	}
 	
-	public void join(List<byte[]> chunks) throws IOException
+	public static void join(List<byte[]> chunks) throws IOException
 	{
-	    	System.out.println(chunks.get(0).length);
-	    	System.out.println(chunks.size());
-	    	byte [] res = new byte [chunks.get(0).length*chunks.size()];
-	    	
+	    	byte [] res = new byte [chunks.get(0).length*(chunks.size()-1)+chunks.get(chunks.size()-1).length];
+	    	System.out.println(chunks.get(0).length*(chunks.size()-1)+chunks.get(chunks.size()-1).length);
 	    	System.arraycopy(chunks.get(0), 0, res, 0, chunks.get(0).length);
-	    	System.out.println(new String(chunks.get(0)));
 	    	for(int i = 1; i < chunks.size(); i++)
 	    	{
 	    		System.arraycopy(chunks.get(i), 0, res, CHUNK_SIZE*i, chunks.get(i).length);
 	    	}
-	    	
-	    	
+	    		    	
 	    	OutputStream out = new BufferedOutputStream(new FileOutputStream("example.dib"));
 	        
 	        try {                    
