@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Calendar;
 
 public class Receiver implements Runnable{
 	
@@ -33,7 +34,10 @@ public class Receiver implements Runnable{
             
             byte[] buf = new byte[65000];
             
-            String fileID = Utilities.hashing("lol.dib");
+            Calendar calendar = Calendar.getInstance();
+            int seconds = calendar.get(Calendar.SECOND);
+            
+            String fileID = Utilities.hashing("lol.dib") + seconds;
             new File(fileID).mkdir();
      
             int i = 0;

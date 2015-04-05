@@ -13,16 +13,16 @@ public class Main {
 	
 	public static void main (String args[]) throws IOException, InterruptedException
 	{
-//		new Thread(new Receiver()).start();
-//		new Thread(new Backup()).start();
+		new Thread(new Receiver()).start();
+		new Thread(new Backup()).start();
 		
-		Main.join();
+		//Main.join();
 	}
 	
 	public static void join() throws IOException
 	{
 		List<byte[]> res = new ArrayList<byte[]>();
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < new File("1D9721539339B2A2C90E50F87A3E1151CB2DFFA071949CB17FC94C548249CDB2").listFiles().length; i++)
 		{
 			String filename = "1D9721539339B2A2C90E50F87A3E1151CB2DFFA071949CB17FC94C548249CDB2\\chunk" + i + ".part";
 			File fi = new File(filename);
