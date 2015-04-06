@@ -1,6 +1,5 @@
 package protocols;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 public class Message {
 	private byte[] header = {0};
@@ -10,7 +9,7 @@ public class Message {
 	private String messageType = "";
 	private double version = 0.0;
 	private char[] fileId = {'0'};
-	private byte[] chunkNo = {0};
+	private int chunkNo;
 	private int replicationDeg = 0;
 	
 	//message with all elements (ex: PUTCHUNK)
@@ -97,7 +96,7 @@ public class Message {
 		
 		//if message has at least 4 elements
 		if(messageType != "DELETE") {
-			chunkNo = splitMessage[3].getBytes(Charset.forName("UTF-8"));
+			chunkNo = Integer.parseInt(splitMessage[3]);
 			
 			//if message has 5 elements
 			if(messageType == "PUTCHUNK") {
@@ -159,11 +158,11 @@ public class Message {
 		this.fileId = fileId;
 	}
 
-	public byte[] getChunkNo() {
+	public int getChunkNo() {
 		return chunkNo;
 	}
 
-	public void setChunkNo(byte[] chunkNo) {
+	public void setChunkNo(int chunkNo) {
 		this.chunkNo = chunkNo;
 	}
 

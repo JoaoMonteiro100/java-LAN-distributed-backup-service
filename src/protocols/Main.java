@@ -1,10 +1,8 @@
 package protocols;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.net.MulticastSocket;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,9 @@ public class Main {
 	
 	public static void main (String args[]) throws IOException, InterruptedException
 	{
-		new Thread(new Receiver()).start();
-		new Thread(new Backup()).start();
+		MulticastSocket sendingSocket = new MulticastSocket();
+		new Thread(new Receiver(sendingSocket)).start();
+		new Thread(new Backup("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket, 1)).start();
 		
 		//Main.join();
 	}

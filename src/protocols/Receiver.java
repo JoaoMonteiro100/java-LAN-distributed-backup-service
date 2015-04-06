@@ -17,18 +17,28 @@ public class Receiver implements Runnable{
 	final static String INET_ADDR_MC = "224.0.0.3";
 	final static String INET_ADDR_MDB = "224.0.0.4";
 	final static String INET_ADDR_MDR = "224.0.0.5";
+	
     final static int MC_PORT = 8887;
     final static int MDB_PORT = 8888;
     final static int MDR_PORT = 8889;
-
+    
+    private final MulticastSocket sendingSocket;
+    
+    public Receiver(MulticastSocket sendingSocket){
+    	this.sendingSocket = sendingSocket;
+    }
+    
 	@Override
 	public void run() {
 		 
-        try (MulticastSocket clientSocket = new MulticastSocket(MDB_PORT)){
+        try {
+        	
         	
         	InetAddress address = InetAddress.getByName(INET_ADDR_MDB);
         	InetAddress address1 = InetAddress.getByName(INET_ADDR_MC);
-        	MulticastSocket clientSocket1 = new MulticastSocket(MC_PORT);
+        	
+        	MulticastSocket clientSocket = new MulticastSocket(MDB_PORT);
+        	//MulticastSocket clientSocket1 = new MulticastSocket(MC_PORT);
             
             clientSocket.joinGroup(address);
             
@@ -49,8 +59,7 @@ public class Receiver implements Runnable{
                 
                 Message got = new Message (msg);
                 
-                String filename = fileID + "\\" + "chunk" + i + ".part"; 
-                
+                String filename = fileID + "\\" + "chunk" + got.getChunkNo() + ".part"; 
                 
                 OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
                 
@@ -71,9 +80,10 @@ public class Receiver implements Runnable{
                 byte [] ola = response.getEntireMessage();
                 DatagramPacket pacote = new DatagramPacket(ola,
 	            		ola.length, address1, MC_PORT);
-                clientSocket1.send(pacote);
+                sendingSocket.send(pacote);
                 i++;
             }
+            
         } catch (IOException ex) {
           ex.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
