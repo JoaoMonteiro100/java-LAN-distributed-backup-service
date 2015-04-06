@@ -41,10 +41,10 @@ public class Backup implements Runnable{
         	
         	clientSocket.joinGroup(addr1);
            
-        	File fi = new File("C:\\Users\\Miguel Tavares\\Pictures\\lol.dib");
+        	File fi = new File("C:\\abc.jpg");
         	byte[] fileContent = Files.readAllBytes(fi.toPath());     	
         	
-        	String fileID = Utilities.hashing("lol.dib");
+        	String fileID = Utilities.hashing("abc.jpg");
         	
         	List<byte[]> chunks = divideArray(fileContent, CHUNK_SIZE);
         	
