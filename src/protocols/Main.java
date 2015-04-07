@@ -13,10 +13,12 @@ public class Main {
 	{
 		MulticastSocket sendingSocket = new MulticastSocket();
 		new Thread(new Receiver(sendingSocket)).start();
-		//new Thread(new Backup("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket, 1)).start();
-		new Thread(new Restore("1D9721539339B2A2C90E50F87A3E1151CB2DFFA071949CB17FC94C548249CDB2", sendingSocket, 1)).start();
+		new Thread(new Backup("C:/abc.jpg", sendingSocket, 1)).start();
 		
-//		Main.join();
+		//FILE ID
+		//new Thread(new Restore("1D9721539339B2A2C90E50F87A3E1151CB2DFFA071949CB17FC94C548249CDB2", 1, sendingSocket)).start();
+		
+		//Main.join();
 	}
 	
 	public static void join() throws IOException

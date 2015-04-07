@@ -24,7 +24,7 @@ public class Restore implements Runnable {
     final static int MDB_PORT = 8888;
     final static int MDR_PORT = 8889;
 
-	public Restore(String fileID, MulticastSocket sendingSocket, int chunkNo) {
+	public Restore(String fileID, int chunkNo, MulticastSocket sendingSocket) {
 		this.fileID = fileID;
 		this.sendingSocket = sendingSocket;
 		this.chunkNo = chunkNo;
@@ -37,7 +37,7 @@ public class Restore implements Runnable {
         	InetAddress addr = InetAddress.getByName(INET_ADDR_MDR);
         	
         	char[] fileIDchar = fileID.toCharArray();
-        	Message msg = new Message("GETCHUNK", 1.0, fileIDchar, chunkNo);
+        	Message msg = new Message("DELETE", 1.0, fileIDchar);
         	byte [] pot = msg.getEntireMessage();
         	
         	DatagramPacket msgPacket = new DatagramPacket(pot,

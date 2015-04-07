@@ -64,6 +64,7 @@ public class Receiver implements Runnable{
                 
                 Message got = new Message (msg);
                 
+                //-----------------
                 //ANSWER TO BACKUP
                 if(got.getMessageType()=="PUTCHUNK") {
                 	String filename = fileID + "\\" + "chunk" + got.getChunkNo() + ".part"; 
@@ -90,8 +91,10 @@ public class Receiver implements Runnable{
 	                i++;
                 }
                 
+                
+                //-----------------
                 //ANSWER TO RESTORE
-                if(got.getMessageType()=="GETCHUNK") {
+                else if(got.getMessageType()=="GETCHUNK") {
 	                String filename = got.getFileId() + "\\" + "chunk" + got.getChunkNo() + ".part"; 
 	                InputStream in = new BufferedInputStream(new FileInputStream(filename));
 	                byte[] data = new byte[65000];
@@ -110,15 +113,13 @@ public class Receiver implements Runnable{
 	                	if (in != null) 
 	                		in.close();
 	                }
-	                
-	                byte [] empty = new byte[0];
 
 	        		Thread.sleep(200);
 	
 	                Message response = new Message("CHUNK", 1.0, got.getFileId(), got.getChunkNo(), data);
 	                byte [] ola = response.getEntireMessage();
 	                DatagramPacket pacote = new DatagramPacket(ola,
-		            		ola.length, address1, MC_PORT);
+		            		ola.length, address2, MDR_PORT);
 	                sendingSocket.send(pacote);
 	                i++;
                 }

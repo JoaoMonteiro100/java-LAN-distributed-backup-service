@@ -84,8 +84,8 @@ public class Message {
 			System.arraycopy(body, 0, entireMessage, header.length, body.length);
 		}
 	
-	//message without 'replicationDeg' and 'chunkNo' (ex: DELETE)
-	public Message(String messageType, double version, char[] fileId, byte[] content) throws UnsupportedEncodingException {
+	//message without 'replicationDeg', 'chunkNo' and content (ex: DELETE)
+	public Message(String messageType, double version, char[] fileId) throws UnsupportedEncodingException {
 		String ver = Double.toString(version);
 		String fId = new String(fileId);
 		//String cont = new String(content);
@@ -99,7 +99,6 @@ public class Message {
 		String concatenatedHeader = messageType + space + ver + space + fId + space + crlf + crlf;
 		
 		header = concatenatedHeader.getBytes();
-		body = content;
 		
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];
