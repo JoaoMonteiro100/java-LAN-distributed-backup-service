@@ -123,6 +123,17 @@ public class Receiver implements Runnable{
 	                sendingSocket.send(pacote);
 	                i++;
                 }
+                
+                
+                //-----------------
+                //ANSWER TO DELETE
+                else if(got.getMessageType()=="DELETE") {
+                	for(int j = 0; i < 1000000; i++) {
+                		String filename = got.getFileId() + "\\" + "chunk" + j + ".part";
+                		//delete each file
+                		//end early if file doesn't exist
+                	}
+                }
             }
             
         } catch (IOException ex) {

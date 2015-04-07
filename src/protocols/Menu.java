@@ -44,21 +44,57 @@ public class Menu {
 	    //if backup
 	    if (choice == 'B' || choice == 'b') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("What file do you want to backup? (Write directory)");
+		    System.out.print("What file do you want to backup?");
+		    /*
+		     * THIS
+		     * CANNOT
+		     * HAPPEN!!!!
+		     * 
+		     * nao podemos pedir ao utilizador para escrever por extenso um fileID
+		     * (VER ENUNCIADO)
+		     * |
+		     * |
+		     * V
+		     * programa pode mostrar dir e dar opções 1, 2, 3, etc. c fileIDs
+		     */
 		    return("BACKUP "+answer.nextLine());
 	    }
 	    
 	    //if restore
 	    else if (choice == 'R' || choice == 'r') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("Which file do you want to restore? (Write ID)");
+		    System.out.print("Which file do you want to restore?");
+		    /*
+		     * THIS
+		     * CANNOT
+		     * HAPPEN!!!!
+		     * 
+		     * nao podemos pedir ao utilizador para escrever por extenso um fileID
+		     * (VER ENUNCIADO)
+		     * |
+		     * |
+		     * V
+		     * programa pode mostrar dir e dar opções 1, 2, 3, etc. c fileIDs
+		     */
 		    return("RESTORE "+answer.nextLine());
 	    }
 	    
 	    //if delete
 	    else if (choice == 'D' || choice == 'd') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("Which file do you want to restore? (Write ID)");
+		    System.out.print("Which file do you want to restore?");
+		    /*
+		     * THIS
+		     * CANNOT
+		     * HAPPEN!!!!
+		     * 
+		     * nao podemos pedir ao utilizador para escrever por extenso um fileID
+		     * (VER ENUNCIADO)
+		     * |
+		     * |
+		     * V
+		     * programa pode mostrar dir e dar opções 1, 2, 3, etc. c fileIDs
+		     */
 		    return("DELETE "+answer.nextLine());
 	    }
 	    
