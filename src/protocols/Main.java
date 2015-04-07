@@ -14,7 +14,7 @@ public class Main {
 		MulticastSocket sendingSocket = new MulticastSocket();
 		new Thread(new Receiver(sendingSocket)).start();
 		new Thread(new Backup("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket, 1)).start();
-//		new Thread(new Restore("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket)).start();
+		//new Thread(new Restore("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket)).start();
 		
 		//Main.join();
 	}

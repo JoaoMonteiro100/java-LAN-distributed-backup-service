@@ -42,13 +42,10 @@ public class Backup implements Runnable{
 	public void run() {
 		
         try {
-        	//MulticastSocet serverSocket = new MulticastSocket();
-        	MulticastSocket clientSocket = new MulticastSocket(MC_PORT);
         	
         	InetAddress addr = InetAddress.getByName(INET_ADDR_MDB);
-        	//InetAddress addr1 = InetAddress.getByName(INET_ADDR_MC);
         	
-        	//clientSocket.joinGroup(addr1);
+        	sendingSocket.setSoTimeout(500);
            
         	File fi = new File(filename);
         	byte[] fileContent = Files.readAllBytes(fi.toPath());     	
@@ -73,23 +70,11 @@ public class Backup implements Runnable{
 	 
 	            System.out.println("Sent part number" + i);
 	            
-	            Thread.sleep(500);
-	            
-	            /*byte [] ola = new byte [100];
-	            DatagramPacket pacote = new DatagramPacket(ola, ola.length);
-                clientSocket.receive(pacote);
-                String ok = new String(ola);
-                System.out.println(ok);*/
-            }
-  
-        	//clientSocket.close();
-            
+        	}
+        	
         } catch (IOException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
-        } catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        } 
 		
 	}
 	
