@@ -1,9 +1,12 @@
 package protocols;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -31,16 +34,18 @@ public class Receiver implements Runnable{
 	@Override
 	public void run() {
 		 
-        try {
-        	
-        	
+        try {	
         	InetAddress address = InetAddress.getByName(INET_ADDR_MDB);
         	InetAddress address1 = InetAddress.getByName(INET_ADDR_MC);
+        	InetAddress address2 = InetAddress.getByName(INET_ADDR_MDR);
         	
         	MulticastSocket clientSocket = new MulticastSocket(MDB_PORT);
         	MulticastSocket clientSocket1 = new MulticastSocket(MC_PORT);
+        	MulticastSocket clientSocket2 = new MulticastSocket(MDR_PORT);
             
             clientSocket.joinGroup(address);
+            clientSocket.joinGroup(address1);
+            clientSocket.joinGroup(address2);
             
             byte[] buf = new byte[65000];
             
@@ -59,29 +64,64 @@ public class Receiver implements Runnable{
                 
                 Message got = new Message (msg);
                 
-                String filename = fileID + "\\" + "chunk" + got.getChunkNo() + ".part"; 
-                
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
-                
-                try {                    
-                    out.write(got.getBody());
-                } 
-                finally {
-                	if (out != null) 
-                		out.close();
+                //ANSWER TO BACKUP
+                if(got.getMessageType()=="PUTCHUNK") {
+                	String filename = fileID + "\\" + "chunk" + got.getChunkNo() + ".part"; 
+	                OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
+	                
+	                try {                    
+	                    out.write(got.getBody());
+	                } 
+	                finally {
+	                	if (out != null) 
+	                		out.close();
+	                }
+	                
+	                byte [] empty = new byte[0];
+	        		char[] fileIDchar = fileID.toCharArray();
+	        		
+	        		Thread.sleep(200);
+	
+	                Message response = new Message("STORED", 1.0, fileIDchar, i, empty);
+	                byte [] ola = response.getEntireMessage();
+	                DatagramPacket pacote = new DatagramPacket(ola,
+		            		ola.length, address1, MC_PORT);
+	                sendingSocket.send(pacote);
+	                i++;
                 }
                 
-                byte [] empty = new byte[0];
-        		char[] fileIDchar = fileID.toCharArray();
-        		
-        		Thread.sleep(200);
+                //ANSWER TO RESTORE
+                if(got.getMessageType()=="GETCHUNK") {
+	                String filename = got.getFileId() + "\\" + "chunk" + got.getChunkNo() + ".part"; 
+	                InputStream in = new BufferedInputStream(new FileInputStream(filename));
+	                byte[] data = new byte[65000];
+	                
+	                try {
+	                	int a = 0, j = 0;
 
-                Message response = new Message("STORED", 1.0, fileIDchar, i, empty);
-                byte [] ola = response.getEntireMessage();
-                DatagramPacket pacote = new DatagramPacket(ola,
-	            		ola.length, address1, MC_PORT);
-                sendingSocket.send(pacote);
-                i++;
+	                	//until end of file
+	                	while(a!=-1) {
+	                		a = in.read();
+	                		data[j] = (byte) a;
+	                		j++;
+	                	}
+	                } 
+	                finally {
+	                	if (in != null) 
+	                		in.close();
+	                }
+	                
+	                byte [] empty = new byte[0];
+
+	        		Thread.sleep(200);
+	
+	                Message response = new Message("CHUNK", 1.0, got.getFileId(), got.getChunkNo(), data);
+	                byte [] ola = response.getEntireMessage();
+	                DatagramPacket pacote = new DatagramPacket(ola,
+		            		ola.length, address1, MC_PORT);
+	                sendingSocket.send(pacote);
+	                i++;
+                }
             }
             
         } catch (IOException ex) {
