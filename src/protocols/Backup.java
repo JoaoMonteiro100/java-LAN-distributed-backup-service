@@ -42,39 +42,28 @@ public class Backup implements Runnable{
 	public void run() {
 		
         try {
-        	
-        	InetAddress addr = InetAddress.getByName(INET_ADDR_MDB);
-        	
-        	sendingSocket.setSoTimeout(500);
-           
+                   
         	File fi = new File(filename);
         	byte[] fileContent = Files.readAllBytes(fi.toPath());     	
         	
         	String fileID = Utilities.hashing(filename);
+        	char[] fileIDchar = fileID.toCharArray();
         	
-        	List<byte[]> chunks = divideArray(fileContent, CHUNK_SIZE);
-        	
-        	join(chunks);
-        	
+        	List<byte[]> chunks = divideArray(fileContent, CHUNK_SIZE);        	
         	
         	for(int i = 0; i < chunks.size(); i++)
         	{
-        		char[] fileIDchar = fileID.toCharArray();
-        		Message msg = new Message("PUTCHUNK", 1.0, fileIDchar, i, replicationDegree, chunks.get(i));
-        	       		
-        		byte [] pot = msg.getEntireMessage();
-	            DatagramPacket msgPacket = new DatagramPacket(pot,
-	            		pot.length, addr, MDB_PORT);
-	            
-	            sendingSocket.send(msgPacket);
-	 
-	            System.out.println("Sent part number" + i);
+        		
+        		new Thread(new Putchunk(i, replicationDegree, fileIDchar, chunks.get(i), sendingSocket)).start();
+        		Thread.sleep(500);
 	            
         	}
         	
         } catch (IOException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
-        } 
+        } catch (InterruptedException e) {
+			e.printStackTrace();
+		} 
 		
 	}
 	

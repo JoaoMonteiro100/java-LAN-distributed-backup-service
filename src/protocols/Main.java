@@ -16,7 +16,7 @@ public class Main {
 		new Thread(new Backup("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket, 1)).start();
 		//new Thread(new Restore("C:/Users/Miguel Tavares/Pictures/lol.dib", sendingSocket)).start();
 		
-		//Main.join();
+//		Main.join();
 	}
 	
 	public static void join() throws IOException

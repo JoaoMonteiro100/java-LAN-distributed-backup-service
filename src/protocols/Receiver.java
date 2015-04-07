@@ -38,7 +38,7 @@ public class Receiver implements Runnable{
         	InetAddress address1 = InetAddress.getByName(INET_ADDR_MC);
         	
         	MulticastSocket clientSocket = new MulticastSocket(MDB_PORT);
-        	//MulticastSocket clientSocket1 = new MulticastSocket(MC_PORT);
+        	MulticastSocket clientSocket1 = new MulticastSocket(MC_PORT);
             
             clientSocket.joinGroup(address);
             
