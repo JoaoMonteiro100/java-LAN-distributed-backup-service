@@ -33,7 +33,7 @@ public class Receiver implements Runnable{
     
 	@Override
 	public void run() {
-		 
+
         try {	
         	InetAddress address = InetAddress.getByName(INET_ADDR_MDB);
         	InetAddress address1 = InetAddress.getByName(INET_ADDR_MC);
@@ -54,7 +54,7 @@ public class Receiver implements Runnable{
             
             String fileID = Utilities.hashing("lol.dib") + seconds;
             new File(fileID).mkdir();
-     
+            
             int i = 0;
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
@@ -63,10 +63,9 @@ public class Receiver implements Runnable{
                 byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
                 
                 Message got = new Message (msg);
-                
                 //-----------------
                 //ANSWER TO BACKUP
-                if(got.getMessageType()=="PUTCHUNK") {
+                if(got.getMessageType().equals("PUTCHUNK")) {
                 	String filename = fileID + "\\" + "chunk" + got.getChunkNo() + ".part"; 
 	                OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
 	                
@@ -94,7 +93,7 @@ public class Receiver implements Runnable{
                 
                 //-----------------
                 //ANSWER TO RESTORE
-                else if(got.getMessageType()=="GETCHUNK") {
+                else if(got.getMessageType().equals("GETCHUNK")) {
 	                String filename = got.getFileId() + "\\" + "chunk" + got.getChunkNo() + ".part"; 
 	                InputStream in = new BufferedInputStream(new FileInputStream(filename));
 	                byte[] data = new byte[65000];
@@ -127,7 +126,7 @@ public class Receiver implements Runnable{
                 
                 //-----------------
                 //ANSWER TO DELETE
-                else if(got.getMessageType()=="DELETE") {
+                else if(got.getMessageType().equals("DELETE")) {
                 	for(int j = 0; i < 1000000; i++) {
                 		String filename = got.getFileId() + "\\" + "chunk" + j + ".part";
                 		//delete each file

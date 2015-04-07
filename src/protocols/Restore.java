@@ -14,7 +14,6 @@ public class Restore implements Runnable {
 	
 	private final String fileID;
 	private final MulticastSocket sendingSocket;
-	private final int chunkNo;
 	
 	final static String INET_ADDR_MC = "224.0.0.3";
 	final static String INET_ADDR_MDB = "224.0.0.4";
@@ -24,10 +23,9 @@ public class Restore implements Runnable {
     final static int MDB_PORT = 8888;
     final static int MDR_PORT = 8889;
 
-	public Restore(String fileID, int chunkNo, MulticastSocket sendingSocket) {
+	public Restore(String fileID, MulticastSocket sendingSocket) {
 		this.fileID = fileID;
 		this.sendingSocket = sendingSocket;
-		this.chunkNo = chunkNo;
 	}
 
 	@Override
@@ -37,18 +35,14 @@ public class Restore implements Runnable {
         	InetAddress addr = InetAddress.getByName(INET_ADDR_MDR);
         	
         	char[] fileIDchar = fileID.toCharArray();
-        	Message msg = new Message("DELETE", 1.0, fileIDchar);
-        	byte [] pot = msg.getEntireMessage();
         	
-        	DatagramPacket msgPacket = new DatagramPacket(pot,
-            		pot.length, addr, MDR_PORT);
-        	
-        	sendingSocket.send(msgPacket);
-       	 
-            System.out.println("Sent getchunk request for chunk #" + chunkNo);
-
-            Thread.sleep(500);
-            
+        	//WE HAVE TO DETERMINE THIS INFO
+        	int chunkNo = 0, fileSize = 0;
+        	//FAZER THREAD COMO PUTCHUNK PARA GUARDAR OS Q FORAM RECEBIDOS -- FAZER LISTA (EX: RECEBO CHUNK 5, PONHO NA POS 5)
+        	for(int j = 0; j < chunkNo; j++) {
+        		new Thread(new Getchunk(j, fileIDchar, sendingSocket)).start();
+	            Thread.sleep(500);
+        	}
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException e) {

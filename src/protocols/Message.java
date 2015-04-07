@@ -112,25 +112,25 @@ public class Message {
 		String[] splitMessage = messageStr.split("\\s"); //the spaces divide the components of the message
 		
 		//common elements to all messages
-		messageType = splitMessage[0];
-		version = Double.parseDouble(splitMessage[1]);
-		fileId = splitMessage[2].toCharArray();
+		messageType = splitMessage[0].trim();
+		version = Double.parseDouble(splitMessage[1].trim());
+		fileId = splitMessage[2].trim().toCharArray();
 		
 		//if message has at least 4 elements
 		if(messageType != "DELETE") {
-			chunkNo = Integer.parseInt(splitMessage[3]);
+			chunkNo = Integer.parseInt(splitMessage[3].trim());
 			
 			//if message has 5 elements
 			if(messageType == "PUTCHUNK") {
-				replicationDeg = Integer.parseInt(splitMessage[4]);
+				replicationDeg = Integer.parseInt(splitMessage[4].trim());
 			}
 		}
 		
 		//TODO: CONFIRMAR SE FUNCIONA ASSIM!!!
 		String[] splitBody = messageStr.split("\\r\\n\\r\\n"); //CRLF CRLF divides de body from the header
-		header = splitBody[0].getBytes();
+		header = splitBody[0].trim().getBytes();
 		
-		body = new byte [splitBody[1].length()];
+		body = new byte [splitBody[1].trim().length()];
 		
 		System.arraycopy(message, splitBody[0].length()+4, body, 0, splitBody[1].length());
 				

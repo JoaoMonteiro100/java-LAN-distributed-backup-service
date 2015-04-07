@@ -53,12 +53,10 @@ public class Backup implements Runnable{
         	
         	for(int i = 0; i < chunks.size(); i++)
         	{
-        		
         		new Thread(new Putchunk(i, replicationDegree, fileIDchar, chunks.get(i), sendingSocket)).start();
         		Thread.sleep(500);
-	            
         	}
-        	
+
         } catch (IOException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
         } catch (InterruptedException e) {
