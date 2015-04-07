@@ -32,15 +32,12 @@ public class Restore implements Runnable {
 
 	@Override
 	public void run() {
-
         try {
-        	MulticastSocket clientSocket = new MulticastSocket(MC_PORT);
-        	
-        	InetAddress addr = InetAddress.getByName(INET_ADDR_MDB);
+        	MulticastSocket clientSocket = new MulticastSocket(MDR_PORT);
+        	InetAddress addr = InetAddress.getByName(INET_ADDR_MDR);
         	
         	char[] fileIDchar = fileID.toCharArray();
         	Message msg = new Message("GETCHUNK", 1.0, fileIDchar, chunkNo);
-        	
         	byte [] pot = msg.getEntireMessage();
         	
         	DatagramPacket msgPacket = new DatagramPacket(pot,
@@ -57,7 +54,6 @@ public class Restore implements Runnable {
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-	}
-
+        }
 	}
 }
