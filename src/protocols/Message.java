@@ -37,7 +37,7 @@ public class Message {
 		System.arraycopy(body, 0, entireMessage, header.length, body.length);
 	}
 	
-	//message without 'replicationDeg' (ex: STORED, GETCHUNK, CHUNK, REMOVED)
+	//message without 'replicationDeg' (ex: CHUNK)
 	public Message(String messageType, double version, char[] fileId, int chunkNo, byte[] content) throws UnsupportedEncodingException {
 		String ver = Double.toString(version);
 		String fId = new String(fileId);
@@ -60,6 +60,29 @@ public class Message {
 		System.arraycopy(header, 0, entireMessage, 0, header.length);
 		System.arraycopy(body, 0, entireMessage, header.length, body.length);
 	}
+	
+	//message without 'replicationDeg' and content (ex: GETCHUNK)
+		public Message(String messageType, double version, char[] fileId, int chunkNo) throws UnsupportedEncodingException {
+			String ver = Double.toString(version);
+			String fId = new String(fileId);
+			String cNo = Integer.toString(chunkNo);
+			//String cont = new String(content);
+			
+			int cr = 13; //carriage return
+			int lf = 10; //new line
+			int sp = 32; //space
+			String crlf = Character.toString((char) cr) + Character.toString((char) lf);
+			String space = Character.toString((char) sp);
+			
+			String concatenatedHeader = messageType + space + ver + space + fId + space + cNo + space + crlf + crlf;
+			
+			header = concatenatedHeader.getBytes();
+			
+			//concatenation of header + body in entireMessage
+			entireMessage = new byte[header.length + body.length];
+			System.arraycopy(header, 0, entireMessage, 0, header.length);
+			System.arraycopy(body, 0, entireMessage, header.length, body.length);
+		}
 	
 	//message without 'replicationDeg' and 'chunkNo' (ex: DELETE)
 	public Message(String messageType, double version, char[] fileId, byte[] content) throws UnsupportedEncodingException {
