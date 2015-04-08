@@ -109,10 +109,12 @@ public class Receiver implements Runnable{
 
 	        		Thread.sleep(200);
 	
+	        		InetAddress inetAdd = InetAddress.getByName(INET_ADDR_MDR);
 	                Message response = new Message("CHUNK", 1.0, got.getFileId(), got.getChunkNo(), data);
 	                byte [] ola = response.getEntireMessage();
+	                System.out.println("Thank you comagain");
 	                DatagramPacket pacote = new DatagramPacket(ola,
-		            		ola.length, inetAddress, MDR_PORT);
+		            		ola.length, inetAdd, MDR_PORT);
 	                sendingSocket.send(pacote);
                 }
                 
