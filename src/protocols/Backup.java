@@ -39,6 +39,8 @@ public class Backup implements Runnable{
         	String fileID = Utilities.hashing(filename);
         	char[] fileIDchar = fileID.toCharArray();
         	
+        	new File(fileID).mkdir();
+        	
         	List<byte[]> chunks = divideArray(fileContent, CHUNK_SIZE);        	
         	
         	for(int i = 0; i < chunks.size(); i++)

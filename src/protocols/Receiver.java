@@ -56,9 +56,6 @@ public class Receiver implements Runnable{
             /*Calendar calendar = Calendar.getInstance();
             int seconds = calendar.get(Calendar.SECOND);*/
             
-            String fileID = Utilities.hashing("lol.dib");// + seconds;
-            new File(fileID).mkdir();
-            
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 clientSocket.receive(msgPacket);
@@ -69,7 +66,7 @@ public class Receiver implements Runnable{
                 //-----------------
                 //ANSWER TO BACKUP
                 if(got.getMessageType().equals("PUTCHUNK")) {
-                	String filename = fileID + "\\" + "chunk" + got.getChunkNo() + ".part"; 
+                	String filename = String.valueOf(got.getFileId()) + "\\" + "chunk" + got.getChunkNo() + ".part"; 
 	                OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
 	                
 	                try {                    
@@ -81,7 +78,7 @@ public class Receiver implements Runnable{
 	                }
 	                
 	                byte [] empty = new byte[0];
-	        		char[] fileIDchar = fileID.toCharArray();
+	        		char[] fileIDchar = got.getFileId();
 	        		
 	        		Thread.sleep(200);
 	
@@ -129,21 +126,20 @@ public class Receiver implements Runnable{
                 else if(got.getMessageType().equals("DELETE")) {
                         File folderName = new File(String.valueOf(got.getFileId()));
                 		String[]entries = folderName.list();
-                		for(String s: entries){
-                		    File currentFile = new File(folderName.getPath(),s);
-                		    currentFile.delete();
+                		if(folderName.exists()){
+	                		for(String s: entries){
+	                		    File currentFile = new File(folderName.getPath(),s);
+	                		    currentFile.delete();
+	                		}
+	                		folderName.delete();
                 		}
-                		folderName.delete();
                 	
                 }
             }
             
         } catch (IOException ex) {
           ex.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+        } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
