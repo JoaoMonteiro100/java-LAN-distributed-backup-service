@@ -15,14 +15,6 @@ public class Restore implements Runnable {
 	
 	private final String filename;
 	private final MulticastSocket sendingSocket;
-	
-	final static String INET_ADDR_MC = "224.0.0.3";
-	final static String INET_ADDR_MDB = "224.0.0.4";
-	final static String INET_ADDR_MDR = "224.0.0.5";
-	
-    final static int MC_PORT = 8887;
-    final static int MDB_PORT = 8888;
-    final static int MDR_PORT = 8889;
     
     final private static int CHUNK_SIZE = 64000;
 
