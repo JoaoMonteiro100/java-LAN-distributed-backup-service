@@ -44,21 +44,20 @@ public class Receiver implements Runnable{
         	MulticastSocket clientSocket2 = new MulticastSocket(MDR_PORT);
             
             clientSocket.joinGroup(address);
-            clientSocket.joinGroup(address1);
-            clientSocket.joinGroup(address2);
+            clientSocket1.joinGroup(address1);
+            clientSocket2.joinGroup(address2);
             
             byte[] buf = new byte[65000];
             
-            Calendar calendar = Calendar.getInstance();
-            int seconds = calendar.get(Calendar.SECOND);
+            /*Calendar calendar = Calendar.getInstance();
+            int seconds = calendar.get(Calendar.SECOND);*/
             
-            String fileID = Utilities.hashing("lol.dib") + seconds;
+            String fileID = Utilities.hashing("lol.dib");// + seconds;
             new File(fileID).mkdir();
             
-            int i = 0;
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
-                clientSocket.receive(msgPacket);
+                clientSocket1.receive(msgPacket);
                 
                 byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
                 
@@ -82,19 +81,16 @@ public class Receiver implements Runnable{
 	        		
 	        		Thread.sleep(200);
 	
-	                Message response = new Message("STORED", 1.0, fileIDchar, i, empty);
+	                Message response = new Message("STORED", 1.0, fileIDchar, got.getChunkNo(), empty);
 	                byte [] ola = response.getEntireMessage();
 	                DatagramPacket pacote = new DatagramPacket(ola,
 		            		ola.length, address1, MC_PORT);
 	                sendingSocket.send(pacote);
-	                i++;
                 }
                 
                 
-                //-----------------
-                //ANSWER TO RESTORE
                 else if(got.getMessageType().equals("GETCHUNK")) {
-	                String filename = got.getFileId() + "\\" + "chunk" + got.getChunkNo() + ".part"; 
+	                String filename = got.getFileId().toString() + "\\" + "chunk" + got.getChunkNo() + ".part"; 
 	                InputStream in = new BufferedInputStream(new FileInputStream(filename));
 	                byte[] data = new byte[65000];
 	                
@@ -120,18 +116,18 @@ public class Receiver implements Runnable{
 	                DatagramPacket pacote = new DatagramPacket(ola,
 		            		ola.length, address2, MDR_PORT);
 	                sendingSocket.send(pacote);
-	                i++;
                 }
                 
                 
-                //-----------------
-                //ANSWER TO DELETE
+                
                 else if(got.getMessageType().equals("DELETE")) {
-                	for(int j = 0; i < 1000000; i++) {
-                		String filename = got.getFileId() + "\\" + "chunk" + j + ".part";
-                		//delete each file
-                		//end early if file doesn't exist
-                	}
+                        File folderName = new File(String.valueOf(got.getFileId()));
+                		String[]entries = folderName.list();
+                		for(String s: entries){
+                		    File currentFile = new File(folderName.getPath(),s);
+                		    currentFile.delete();
+                		}
+                	
                 }
             }
             

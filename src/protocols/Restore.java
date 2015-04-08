@@ -31,20 +31,19 @@ public class Restore implements Runnable {
 	@Override
 	public void run() {
         try {
-        	MulticastSocket clientSocket = new MulticastSocket(MDR_PORT);
-        	InetAddress addr = InetAddress.getByName(INET_ADDR_MDR);
+        	/*MulticastSocket clientSocket = new MulticastSocket(MDR_PORT);
+        	InetAddress addr = InetAddress.getByName(INET_ADDR_MDR);*/
         	
         	char[] fileIDchar = fileID.toCharArray();
         	
         	//WE HAVE TO DETERMINE THIS INFO
         	int chunkNo = 0, fileSize = 0;
         	//FAZER THREAD COMO PUTCHUNK PARA GUARDAR OS Q FORAM RECEBIDOS -- FAZER LISTA (EX: RECEBO CHUNK 5, PONHO NA POS 5)
+        	
         	for(int j = 0; j < chunkNo; j++) {
         		new Thread(new Getchunk(j, fileIDchar, sendingSocket)).start();
 	            Thread.sleep(500);
         	}
-        } catch (IOException ex) {
-            ex.printStackTrace();
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

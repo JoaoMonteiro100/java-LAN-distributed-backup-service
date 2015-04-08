@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.security.NoSuchAlgorithmException;
 
 public class Delete implements Runnable{
 
-	private final String fileID;
+	private final String filename;
 	private final MulticastSocket sendingSocket;
 	
 	final static String INET_ADDR_MC = "224.0.0.3";
@@ -18,36 +19,39 @@ public class Delete implements Runnable{
     final static int MDB_PORT = 8888;
     final static int MDR_PORT = 8889;
 
-	public Delete(String fileID, MulticastSocket sendingSocket) {
-		this.fileID = fileID;
+	public Delete(String filename, MulticastSocket sendingSocket) {
+		this.filename = filename;
 		this.sendingSocket = sendingSocket;
 	}
 	
 	@Override
 	public void run() {
 		try {
-        	MulticastSocket clientSocket = new MulticastSocket(MC_PORT);
+//        	MulticastSocket clientSocket = new MulticastSocket(MC_PORT);
         	InetAddress addr = InetAddress.getByName(INET_ADDR_MC);
         	
+        	String fileID = Utilities.hashing(filename);
         	char[] fileIDchar = fileID.toCharArray();
         	Message msg = new Message("DELETE", 1.0, fileIDchar);
         	byte [] pot = msg.getEntireMessage();
         	
         	DatagramPacket msgPacket = new DatagramPacket(pot,
             		pot.length, addr, MC_PORT);
-        	
-        	sendingSocket.send(msgPacket);
-       	 
-            System.out.println("Sent delete request for file " + fileID);
-
-            Thread.sleep(500);
+        	for(int i = 0; i < 5; i++)
+        	{
+	        	sendingSocket.send(msgPacket);
+	            Thread.sleep(500);
+            }
             
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-        }
+        } catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
