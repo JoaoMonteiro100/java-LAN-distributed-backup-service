@@ -23,6 +23,8 @@ public class Restore implements Runnable {
     final static int MC_PORT = 8887;
     final static int MDB_PORT = 8888;
     final static int MDR_PORT = 8889;
+    
+    final private static int CHUNK_SIZE = 64000;
 
 	public Restore(String filename, MulticastSocket sendingSocket) {
 		this.filename = filename;
@@ -33,10 +35,16 @@ public class Restore implements Runnable {
 	public void run() {
         try {
         	
+        	File file = new File(filename);
         	String fileID = Utilities.hashing(filename);
         	char[] fileIDchar = fileID.toCharArray();
         	
-        	int chunkNo = 8, fileSize = 0;
+        	int chunkNo = (int) (file.length()/CHUNK_SIZE);
+        	
+        	if( ((int) file.length() % CHUNK_SIZE ) > 0)
+        		chunkNo += 1;
+        	
+        	System.out.println(chunkNo);
         	
         	for(int j = 0; j < chunkNo; j++)
         	{
