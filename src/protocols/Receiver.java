@@ -17,13 +17,13 @@ import java.util.Calendar;
 
 public class Receiver implements Runnable{
 	
-	final static String INET_ADDR_MC = "224.0.0.3";
-	final static String INET_ADDR_MDB = "224.0.0.4";
-	final static String INET_ADDR_MDR = "224.0.0.5";
+	private static String INET_ADDR_MC;
+	private static String INET_ADDR_MDB;
+	private static String INET_ADDR_MDR;
 	
-    final static int MC_PORT = 8887;
-    final static int MDB_PORT = 8888;
-    final static int MDR_PORT = 8889;
+	private static int MC_PORT;
+    private static int MDB_PORT;
+    private static int MDR_PORT;
     
     private final MulticastSocket sendingSocket;
     private final String address;
@@ -33,6 +33,12 @@ public class Receiver implements Runnable{
     	this.sendingSocket = sendingSocket;
     	this.address = address;
     	this.port = port;
+    	INET_ADDR_MC = Menu.getINET_ADDR_MC();
+	    MC_PORT = Menu.getMC_PORT();
+	    INET_ADDR_MDB = Menu.getINET_ADDR_MDB();
+	    MDB_PORT = Menu.getMDB_PORT();
+	    INET_ADDR_MDR = Menu.getINET_ADDR_MDR();
+	    MDR_PORT = Menu.getMDR_PORT();
     }
     
 	@Override

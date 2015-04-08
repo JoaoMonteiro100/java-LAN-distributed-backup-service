@@ -12,19 +12,16 @@ public class Getchunk implements Runnable{
 	private final char[] fileIDchar;
 	private final MulticastSocket sendingSocket;
 	
-	final static String INET_ADDR_MC = "224.0.0.3";
-	final static String INET_ADDR_MDB = "224.0.0.4";
-	final static String INET_ADDR_MDR = "224.0.0.5";
-	
-    final static int MC_PORT = 8887;
-    final static int MDB_PORT = 8888;
-    final static int MDR_PORT = 8889;
+	private static String INET_ADDR_MC;
+	private static int MC_PORT;
 	
 	public Getchunk(int chunkNo, char[] fileIDchar, MulticastSocket sendingSocket)
 	{
 		this.chunkNo = chunkNo;
 		this.fileIDchar = fileIDchar;
 		this.sendingSocket = sendingSocket;
+		INET_ADDR_MC = Menu.getINET_ADDR_MC();
+	    MC_PORT = Menu.getMC_PORT();
 	}
 
 	@Override

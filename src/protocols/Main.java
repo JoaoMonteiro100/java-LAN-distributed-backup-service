@@ -9,16 +9,24 @@ import java.util.List;
 
 public class Main {
 	
-	final static String INET_ADDR_MC = "224.0.0.3";
-	final static String INET_ADDR_MDB = "224.0.0.4";
-	final static String INET_ADDR_MDR = "224.0.0.5";
+	static String INET_ADDR_MC;
+	static String INET_ADDR_MDB;
+	static String INET_ADDR_MDR;
 	
-    final static int MC_PORT = 8887;
-    final static int MDB_PORT = 8888;
-    final static int MDR_PORT = 8889;
+    static int MC_PORT;
+    static int MDB_PORT;
+    static int MDR_PORT;
 	
 	public static void main (String args[]) throws IOException, InterruptedException
 	{
+		Menu.start();
+		INET_ADDR_MC = Menu.getINET_ADDR_MC();
+	    MC_PORT = Menu.getMC_PORT();
+	    INET_ADDR_MDB = Menu.getINET_ADDR_MDB();
+	    MDB_PORT = Menu.getMDB_PORT();
+	    INET_ADDR_MDR = Menu.getINET_ADDR_MDR();
+	    MDR_PORT = Menu.getMDR_PORT();
+	    
 		MulticastSocket sendingSocket = new MulticastSocket();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MC, MC_PORT)).start();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MDB, MDB_PORT)).start();
