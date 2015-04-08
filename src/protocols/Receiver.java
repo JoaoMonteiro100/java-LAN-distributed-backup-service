@@ -26,26 +26,24 @@ public class Receiver implements Runnable{
     final static int MDR_PORT = 8889;
     
     private final MulticastSocket sendingSocket;
+    private final String address;
+    private final int port;
     
-    public Receiver(MulticastSocket sendingSocket){
+    public Receiver(MulticastSocket sendingSocket, String address, int port){
     	this.sendingSocket = sendingSocket;
+    	this.address = address;
+    	this.port = port;
     }
     
 	@Override
 	public void run() {
 
         try {	
-        	InetAddress address = InetAddress.getByName(INET_ADDR_MDB);
-        	InetAddress address1 = InetAddress.getByName(INET_ADDR_MC);
-        	InetAddress address2 = InetAddress.getByName(INET_ADDR_MDR);
-        	
-        	MulticastSocket clientSocket = new MulticastSocket(MDB_PORT);
-        	MulticastSocket clientSocket1 = new MulticastSocket(MC_PORT);
-        	MulticastSocket clientSocket2 = new MulticastSocket(MDR_PORT);
+        	InetAddress inetAddress = InetAddress.getByName(address);
+        	        	
+        	MulticastSocket clientSocket = new MulticastSocket(port);
             
-            clientSocket.joinGroup(address);
-            clientSocket1.joinGroup(address1);
-            clientSocket2.joinGroup(address2);
+            clientSocket.joinGroup(inetAddress);
             
             byte[] buf = new byte[65000];
             
@@ -57,7 +55,7 @@ public class Receiver implements Runnable{
             
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
-                clientSocket1.receive(msgPacket);
+                clientSocket.receive(msgPacket);
                 
                 byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
                 
@@ -84,13 +82,13 @@ public class Receiver implements Runnable{
 	                Message response = new Message("STORED", 1.0, fileIDchar, got.getChunkNo(), empty);
 	                byte [] ola = response.getEntireMessage();
 	                DatagramPacket pacote = new DatagramPacket(ola,
-		            		ola.length, address1, MC_PORT);
+		            		ola.length, inetAddress, port);
 	                sendingSocket.send(pacote);
                 }
                 
                 
                 else if(got.getMessageType().equals("GETCHUNK")) {
-	                String filename = got.getFileId().toString() + "\\" + "chunk" + got.getChunkNo() + ".part"; 
+	                String filename = String.valueOf(got.getFileId()) + "\\" + "chunk" + got.getChunkNo() + ".part";
 	                InputStream in = new BufferedInputStream(new FileInputStream(filename));
 	                byte[] data = new byte[65000];
 	                
@@ -114,7 +112,7 @@ public class Receiver implements Runnable{
 	                Message response = new Message("CHUNK", 1.0, got.getFileId(), got.getChunkNo(), data);
 	                byte [] ola = response.getEntireMessage();
 	                DatagramPacket pacote = new DatagramPacket(ola,
-		            		ola.length, address2, MDR_PORT);
+		            		ola.length, inetAddress, MDR_PORT);
 	                sendingSocket.send(pacote);
                 }
                 
@@ -127,6 +125,7 @@ public class Receiver implements Runnable{
                 		    File currentFile = new File(folderName.getPath(),s);
                 		    currentFile.delete();
                 		}
+                		folderName.delete();
                 	
                 }
             }

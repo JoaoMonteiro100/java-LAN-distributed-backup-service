@@ -113,25 +113,26 @@ public class Message {
 		
 		//common elements to all messages
 		messageType = splitMessage[0];
-		version = Double.parseDouble(splitMessage[1].trim());
-		fileId = splitMessage[2].trim().toCharArray();
+		version = Double.parseDouble(splitMessage[1]);
+		fileId = splitMessage[2].toCharArray();
 		
 		//if message has at least 4 elements
 		if(!messageType.equals("DELETE")) {
 			chunkNo = Integer.parseInt(splitMessage[3]);			
 			//if message has 5 elements
-			if(messageType == "PUTCHUNK") {
-				replicationDeg = Integer.parseInt(splitMessage[4].trim());
+			if(messageType.equals("PUTCHUNK")) {
+				replicationDeg = Integer.parseInt(splitMessage[4]);
 			}
 		}
 		
 		//TODO: CONFIRMAR SE FUNCIONA ASSIM!!!
 		String[] splitBody = messageStr.split("\\r\\n\\r\\n"); //CRLF CRLF divides de body from the header
 		header = splitBody[0].getBytes();
-		
-		body = new byte [splitBody[1].length()];
-		
-		System.arraycopy(message, splitBody[0].length()+4, body, 0, splitBody[1].length());
+				
+		if(splitBody.length != 1){
+			body = new byte [splitBody[1].length()];
+			System.arraycopy(message, splitBody[0].length()+4, body, 0, splitBody[1].length());
+		}
 				
 		//concatenation of header + body in entireMessage
 		entireMessage = new byte[header.length + body.length];

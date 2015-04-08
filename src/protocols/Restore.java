@@ -2,6 +2,7 @@ package protocols;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -12,7 +13,7 @@ import java.util.List;
 //pull all chunks from a file from other PCs to rebuild it
 public class Restore implements Runnable {
 	
-	private final String fileID;
+	private final String filename;
 	private final MulticastSocket sendingSocket;
 	
 	final static String INET_ADDR_MC = "224.0.0.3";
@@ -23,30 +24,35 @@ public class Restore implements Runnable {
     final static int MDB_PORT = 8888;
     final static int MDR_PORT = 8889;
 
-	public Restore(String fileID, MulticastSocket sendingSocket) {
-		this.fileID = fileID;
+	public Restore(String filename, MulticastSocket sendingSocket) {
+		this.filename = filename;
 		this.sendingSocket = sendingSocket;
 	}
 
 	@Override
 	public void run() {
         try {
-        	/*MulticastSocket clientSocket = new MulticastSocket(MDR_PORT);
-        	InetAddress addr = InetAddress.getByName(INET_ADDR_MDR);*/
         	
+        	String fileID = Utilities.hashing(filename);
         	char[] fileIDchar = fileID.toCharArray();
         	
-        	//WE HAVE TO DETERMINE THIS INFO
-        	int chunkNo = 0, fileSize = 0;
-        	//FAZER THREAD COMO PUTCHUNK PARA GUARDAR OS Q FORAM RECEBIDOS -- FAZER LISTA (EX: RECEBO CHUNK 5, PONHO NA POS 5)
+        	int chunkNo = 8, fileSize = 0;
         	
-        	for(int j = 0; j < chunkNo; j++) {
+        	for(int j = 0; j < chunkNo; j++)
+        	{
         		new Thread(new Getchunk(j, fileIDchar, sendingSocket)).start();
 	            Thread.sleep(500);
         	}
+        	
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-        }
+        } catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
