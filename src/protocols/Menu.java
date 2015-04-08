@@ -17,7 +17,7 @@ public class Menu {
 	//function to acquire knowledge on connection specificities
 	public static void connectionData() {
 	    Scanner answer = new Scanner( System.in );
-	    System.out.print("What are the IP's and ports? (Order: MC, MDB, MDR)\n(Example: 224.0.0.3:8887 224.0.0.4:8888 224.0.0.5:8889)");
+	    System.out.println("What are the IP's and ports? (Order: MC, MDB, MDR)\n(Example: 224.0.0.3:8887 224.0.0.4:8888 224.0.0.5:8889)");
 	    String str = answer.nextLine();
 	    
 	    //split by the spaces
@@ -37,89 +37,55 @@ public class Menu {
 	}
 	
 	//function to know what to backup and how much space to reserve for chunks
-	public static void fileData() {
-	    Scanner answer = new Scanner( System.in );
-	    System.out.print("What is the directory of files to backup?");
-	    backupDir = answer.nextLine();
-	    
+	public static void spaceAllocation() {
 	    Scanner answer2 = new Scanner( System.in );
-	    System.out.print("How much space do you want to allocate in memory (in GB) for chunks?");
+	    System.out.println("How much space do you want to allocate in memory (in GB) for chunks?");
 	    space = answer2.nextDouble();
 	}
 	
 	//function to run when the program starts
 	public static void start() {
 		connectionData();
-		fileData();
+		spaceAllocation();
 	}
 	
-	public String whatNext() {
+	public static String nextAction() {
 		Scanner answer = new Scanner( System.in );
-	    System.out.print("What do you want to do? Backup (B), Restore (R), Delete (D) or Reallocate space (S)?");
+	    System.out.println("What do you want to do? Backup (B), Restore (R), Delete (D) or Reallocate space (S)?");
 	    char choice = answer.next().charAt(0);
 	    
 	    //if backup
 	    if (choice == 'B' || choice == 'b') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("What file do you want to backup?");
-		    /*
-		     * THIS
-		     * CANNOT
-		     * HAPPEN!!!!
-		     * 
-		     * nao podemos pedir ao utilizador para escrever por extenso um fileID
-		     * (VER ENUNCIADO)
-		     * |
-		     * |
-		     * V
-		     * programa pode mostrar dir e dar opções 1, 2, 3, etc. c fileIDs
-		     */
-		    return("BACKUP "+answer.nextLine());
+		    System.out.println("What file do you want to backup?");
+		    String file = answer2.nextLine();
+		    
+		    Scanner answer3 = new Scanner( System.in );
+		    System.out.println("What degree of replication do you want?");
+		    String rep = answer3.nextLine();
+		    
+		    return("BACKUP " + file + " " + rep);
 	    }
 	    
 	    //if restore
 	    else if (choice == 'R' || choice == 'r') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("Which file do you want to restore?");
-		    /*
-		     * THIS
-		     * CANNOT
-		     * HAPPEN!!!!
-		     * 
-		     * nao podemos pedir ao utilizador para escrever por extenso um fileID
-		     * (VER ENUNCIADO)
-		     * |
-		     * |
-		     * V
-		     * programa pode mostrar dir e dar opções 1, 2, 3, etc. c fileIDs
-		     */
-		    return("RESTORE "+answer.nextLine());
+		    System.out.println("Which file do you want to restore?");
+		    return("RESTORE " + answer2.nextLine());
 	    }
 	    
 	    //if delete
 	    else if (choice == 'D' || choice == 'd') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("Which file do you want to restore?");
-		    /*
-		     * THIS
-		     * CANNOT
-		     * HAPPEN!!!!
-		     * 
-		     * nao podemos pedir ao utilizador para escrever por extenso um fileID
-		     * (VER ENUNCIADO)
-		     * |
-		     * |
-		     * V
-		     * programa pode mostrar dir e dar opções 1, 2, 3, etc. c fileIDs
-		     */
-		    return("DELETE "+answer.nextLine());
+		    System.out.println("Which file do you want to delete?");
+		    return("DELETE "+answer2.nextLine());
 	    }
 	    
 	    //if reallocate
 	    else if (choice == 'S' || choice == 's') {
 		    Scanner answer2 = new Scanner( System.in );
-		    System.out.print("How much space do you want to allocate for memory (in GB)?");
-		    return("REALLOCATE "+answer.nextLine());
+		    System.out.println("How much space do you want to allocate in memory (in GB)?");
+		    return("REALLOCATE " + answer2.nextLine());
 	    }
 	    
 	    //default
@@ -133,7 +99,7 @@ public class Menu {
 	}
 
 	public void setBackupDir(String backupDir) {
-		this.backupDir = backupDir;
+		Menu.backupDir = backupDir;
 	}
 
 	public double getSpace() {
@@ -141,7 +107,7 @@ public class Menu {
 	}
 
 	public void setSpace(double space) {
-		this.space = space;
+		Menu.space = space;
 	}
 
 	public static String getINET_ADDR_MC() {

@@ -19,6 +19,7 @@ public class Main {
 	
 	public static void main (String args[]) throws IOException, InterruptedException
 	{
+		//start interface
 		Menu.start();
 		INET_ADDR_MC = Menu.getINET_ADDR_MC();
 	    MC_PORT = Menu.getMC_PORT();
@@ -27,16 +28,43 @@ public class Main {
 	    INET_ADDR_MDR = Menu.getINET_ADDR_MDR();
 	    MDR_PORT = Menu.getMDR_PORT();
 	    
+	    //get variables
 		MulticastSocket sendingSocket = new MulticastSocket();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MC, MC_PORT)).start();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MDB, MDB_PORT)).start();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MDR, MDR_PORT)).start();
 		
+		//cycle to know what the user wants to do next
+		while(true) {
+			String[] toDo = Menu.nextAction().split(" ");
+			
+			//if it's a backup
+			if(toDo[0].equals("BACKUP")) {
+				new Thread(new Backup(toDo[1], sendingSocket, Integer.parseInt(toDo[2]))).start();
+			}
+			
+			//if it's a restore
+			else if(toDo[0].equals("RESTORE")) {
+				new Thread(new Restore(toDo[1], sendingSocket)).start();
+			}
+			
+			//if it's a delete
+			else if(toDo[0].equals("DELETE")) {
+				new Thread(new Delete(toDo[1], sendingSocket)).start();
+			}
+			
+			//if it's a reallocation of space
+			else if(toDo[0].equals("REALLOCATE")) {
+				//new Thread(new ReclaimSpace(Double.parseDouble(toDo[1]), sendingSocket)).start();
+				System.out.println("We're sorry, but the service you chose is not implemented. Choose another one!");
+			}
+		}
+
 //		new Thread(new Backup("lol.dib", sendingSocket, 1)).start();
 		
 		//FILE ID
 		
-		new Thread(new Restore("lol.dib", sendingSocket)).start();
+//		new Thread(new Restore("lol.dib", sendingSocket)).start();
 //		new Thread(new Delete("lol.dib", sendingSocket)).start();
 		
 //		Main.join();
