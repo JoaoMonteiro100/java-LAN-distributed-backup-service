@@ -2,6 +2,7 @@ package protocols;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ public class Main {
     static int MC_PORT;
     static int MDB_PORT;
     static int MDR_PORT;
+    
+    static InetAddress LOCAL_IP;
+    static int LOCAL_PORT;
 	
 	public static void main (String args[]) throws IOException, InterruptedException
 	{
@@ -30,6 +34,10 @@ public class Main {
 	    
 	    //get variables
 		MulticastSocket sendingSocket = new MulticastSocket();
+		
+		LOCAL_PORT = sendingSocket.getLocalPort();
+		LOCAL_IP = InetAddress.getLocalHost();
+		
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MC, MC_PORT)).start();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MDB, MDB_PORT)).start();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MDR, MDR_PORT)).start();
@@ -60,14 +68,6 @@ public class Main {
 			}
 		}
 
-//		new Thread(new Backup("lol.dib", sendingSocket, 1)).start();
-		
-		//FILE ID
-		
-//		new Thread(new Restore("lol.dib", sendingSocket)).start();
-//		new Thread(new Delete("lol.dib", sendingSocket)).start();
-		
-//		Main.join();
 	}
 	
 	public static void join() throws IOException
@@ -83,6 +83,15 @@ public class Main {
 		System.out.println();
 		Backup.join(res);
 	}
+
+	public static InetAddress getIp() {
+		return LOCAL_IP;
+	}
+	
+	public static int getPort() {
+		return LOCAL_PORT;
+	}
+
 }
 
 

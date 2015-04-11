@@ -60,9 +60,16 @@ public class Receiver implements Runnable{
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 clientSocket.receive(msgPacket);
                 
+                if(Main.getPort() == msgPacket.getPort() && Main.getIp().equals(msgPacket.getAddress()))
+                {
+                		System.out.println("Ignore");
+                		continue;
+                }
+                
                 byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
                 
                 Message got = new Message (msg);
+                
                 //-----------------
                 //ANSWER TO BACKUP
                 if(got.getMessageType().equals("PUTCHUNK")) {
@@ -140,7 +147,6 @@ public class Receiver implements Runnable{
         } catch (IOException ex) {
           ex.printStackTrace();
         } catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
