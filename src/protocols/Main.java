@@ -18,7 +18,7 @@ public class Main {
     static int MDB_PORT;
     static int MDR_PORT;
     
-    static InetAddress LOCAL_IP;
+    static String LOCAL_IP;
     static int LOCAL_PORT;
 	
 	public static void main (String args[]) throws IOException, InterruptedException
@@ -36,7 +36,7 @@ public class Main {
 		MulticastSocket sendingSocket = new MulticastSocket();
 		
 		LOCAL_PORT = sendingSocket.getLocalPort();
-		LOCAL_IP = InetAddress.getLocalHost();
+		LOCAL_IP = InetAddress.getLocalHost().getHostAddress();
 		
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MC, MC_PORT)).start();
 		new Thread(new Receiver(sendingSocket, INET_ADDR_MDB, MDB_PORT)).start();
@@ -84,7 +84,7 @@ public class Main {
 		Backup.join(res);
 	}
 
-	public static InetAddress getIp() {
+	public static String getIp() {
 		return LOCAL_IP;
 	}
 	

@@ -16,6 +16,8 @@ public class Putchunk implements Runnable{
 	
 	private static String INET_ADDR_MDB;
 	private static int MDB_PORT;
+	private static String INET_ADDR_MC;
+	private static int MC_PORT;
 	
 	public Putchunk(int chunkNo, int replicationDegree, char[] fileIDchar, byte[] content, MulticastSocket sendingSocket)
 	{
@@ -26,6 +28,8 @@ public class Putchunk implements Runnable{
 		this.sendingSocket = sendingSocket;
 		INET_ADDR_MDB = Menu.getINET_ADDR_MDB();
 	    MDB_PORT = Menu.getMDB_PORT();
+	    INET_ADDR_MC = Menu.getINET_ADDR_MC();
+	    MC_PORT = Menu.getMC_PORT();
 	}
 
 	@Override
@@ -41,8 +45,7 @@ public class Putchunk implements Runnable{
 	        
 	        sendingSocket.send(msgPacket);
 	
-	        System.out.println("Sent part number" + chunkNo);
-	        
+	        System.out.println("Sent part number" + chunkNo);	        
 	        
         }
 		catch(IOException ex){

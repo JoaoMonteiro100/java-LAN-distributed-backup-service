@@ -52,19 +52,21 @@ public class Receiver implements Runnable{
             clientSocket.joinGroup(inetAddress);
             
             byte[] buf = new byte[65000];
-            
-            /*Calendar calendar = Calendar.getInstance();
-            int seconds = calendar.get(Calendar.SECOND);*/
-            
+                        
             while (true) {
                 DatagramPacket msgPacket = new DatagramPacket(buf, buf.length);
                 clientSocket.receive(msgPacket);
                 
-                if(Main.getPort() == msgPacket.getPort() && Main.getIp().equals(msgPacket.getAddress()))
+                if(Main.getPort() == msgPacket.getPort() && Main.getIp().equals(msgPacket.getAddress().toString().replace("/", "")))
                 {
                 		System.out.println("Ignore");
                 		continue;
                 }
+                
+                System.out.println(Main.getPort() == msgPacket.getPort());
+                System.out.println(Main.getIp().equals(msgPacket.getAddress().toString().replace("/","")));
+                System.out.println(Main.getIp());
+                System.out.println(msgPacket.getAddress().toString().replace("/",""));
                 
                 byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
                 
@@ -73,6 +75,8 @@ public class Receiver implements Runnable{
                 //-----------------
                 //ANSWER TO BACKUP
                 if(got.getMessageType().equals("PUTCHUNK")) {
+                	if(!new File(String.valueOf(got.getFileId())).exists())
+                		new File(String.valueOf(got.getFileId())).mkdir();
                 	String filename = String.valueOf(got.getFileId()) + "\\" + "chunk" + got.getChunkNo() + ".part"; 
 	                OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
 	                
