@@ -68,7 +68,7 @@ public class Backup implements Runnable{
 	    return result;
 	}
 	
-	public static void join(List<byte[]> chunks) throws IOException
+	public static void join(List<byte[]> chunks, String file) throws IOException
 	{
 	    	byte [] res = new byte [chunks.get(0).length*(chunks.size()-1)+chunks.get(chunks.size()-1).length];
 	    	System.arraycopy(chunks.get(0), 0, res, 0, chunks.get(0).length);
@@ -77,7 +77,7 @@ public class Backup implements Runnable{
 	    		System.arraycopy(chunks.get(i), 0, res, CHUNK_SIZE*i, chunks.get(i).length);
 	    	}
 	    		    	
-	    	OutputStream out = new BufferedOutputStream(new FileOutputStream("example.dib"));
+	    	OutputStream out = new BufferedOutputStream(new FileOutputStream("Restore de " + file));
 	        
 	        try {                    
 	            out.write(res);

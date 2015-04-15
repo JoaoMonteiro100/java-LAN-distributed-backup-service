@@ -14,7 +14,7 @@ import java.util.List;
 //pull all chunks from a file from other PCs to rebuild it
 public class Restore implements Runnable {
 	
-	private final String filename;
+	private static String filename;
 	private final MulticastSocket sendingSocket;
     
     final private static int CHUNK_SIZE = 64000;
@@ -46,10 +46,18 @@ public class Restore implements Runnable {
         	}
         	
         	while(new File("restore " + fileID).list().length != (new File(filename).length()/64000 + 1)){};
-        	System.out.println("POOTOTOT");
         	
         	try {
 				join(fileID);
+				File folderName = new File("restore " + fileID);
+				if(folderName.exists()){
+					String[]entries = folderName.list();
+            		for(String s: entries){
+            		    File currentFile = new File(folderName.getPath(),s);
+            		    currentFile.delete();
+            		}
+				}
+            	folderName.delete();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,6 +86,6 @@ public class Restore implements Runnable {
 	    	res.add(part);
     	}
 		System.out.println();
-		Backup.join(res);
+		Backup.join(res, filename);
 	}
 }
