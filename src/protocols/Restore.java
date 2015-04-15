@@ -46,6 +46,7 @@ public class Restore implements Runnable {
         	}
         	
         	while(new File("restore " + fileID).list().length != (new File(filename).length()/64000 + 1)){};
+        	System.out.println("POOTOTOT");
         	
         	try {
 				join(fileID);

@@ -155,7 +155,7 @@ public class Receiver implements Runnable{
             }
             
         } catch (IOException ex) {
-          ex.printStackTrace();
+          System.out.println("Some serious stuff happened!");
         } catch (InterruptedException e) {
 			e.printStackTrace();
 		}
