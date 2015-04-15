@@ -70,12 +70,12 @@ public class Main {
 
 	}
 	
-	public static void join() throws IOException
+	public static void join(String file) throws IOException
 	{
 		List<byte[]> res = new ArrayList<byte[]>();
-		for(int i = 0; i < new File("1D9721539339B2A2C90E50F87A3E1151CB2DFFA071949CB17FC94C548249CDB2").listFiles().length; i++)
+		for(int i = 0; i < new File("restore " + file).listFiles().length; i++)
 		{
-			String filename = "1D9721539339B2A2C90E50F87A3E1151CB2DFFA071949CB17FC94C548249CDB2\\chunk" + i + ".part";
+			String filename = "restore " + file + "\\chunk" + i + ".part";
 			File fi = new File(filename);
 	    	byte[] part = Files.readAllBytes(fi.toPath());
 	    	res.add(part);

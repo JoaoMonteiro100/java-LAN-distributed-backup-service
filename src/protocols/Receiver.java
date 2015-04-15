@@ -62,12 +62,7 @@ public class Receiver implements Runnable{
                 		System.out.println("Ignore");
                 		continue;
                 }
-                
-                System.out.println(Main.getPort() == msgPacket.getPort());
-                System.out.println(Main.getIp().equals(msgPacket.getAddress().toString().replace("/","")));
-                System.out.println(Main.getIp());
-                System.out.println(msgPacket.getAddress().toString().replace("/",""));
-                
+                               
                 byte [] msg = Arrays.copyOfRange(buf, 0, msgPacket.getLength());
                 
                 Message got = new Message (msg);
@@ -104,17 +99,18 @@ public class Receiver implements Runnable{
                 else if(got.getMessageType().equals("GETCHUNK")) {
 	                String filename = String.valueOf(got.getFileId()) + "\\" + "chunk" + got.getChunkNo() + ".part";
 	                InputStream in = new BufferedInputStream(new FileInputStream(filename));
-	                byte[] data = new byte[65000];
+	                byte[] data = new byte[(int) new File(filename).length()];
 	                
 	                try {
 	                	int a = 0, j = 0;
 
-	                	//until end of file
-	                	while(a!=-1) {
+	                	do {
 	                		a = in.read();
-	                		data[j] = (byte) a;
+	                		if(a != -1)
+	                			data[j] = (byte) a;
 	                		j++;
-	                	}
+	                	} while(a!=-1);
+	                	
 	                } 
 	                finally {
 	                	if (in != null) 
@@ -126,7 +122,6 @@ public class Receiver implements Runnable{
 	        		InetAddress inetAdd = InetAddress.getByName(INET_ADDR_MDR);
 	                Message response = new Message("CHUNK", 1.0, got.getFileId(), got.getChunkNo(), data);
 	                byte [] ola = response.getEntireMessage();
-	                System.out.println("Thank you comagain");
 	                DatagramPacket pacote = new DatagramPacket(ola,
 		            		ola.length, inetAdd, MDR_PORT);
 	                sendingSocket.send(pacote);
@@ -134,17 +129,28 @@ public class Receiver implements Runnable{
                 
                 
                 
-                else if(got.getMessageType().equals("DELETE")) {
-                        File folderName = new File(String.valueOf(got.getFileId()));
-                		String[]entries = folderName.list();
-                		if(folderName.exists()){
-	                		for(String s: entries){
-	                		    File currentFile = new File(folderName.getPath(),s);
-	                		    currentFile.delete();
-	                		}
-	                		folderName.delete();
-                		}
-                	
+                else if(got.getMessageType().equals("DELETE")) {                        
+	        		File folderName = new File(String.valueOf(got.getFileId()));
+	        		String[]entries = folderName.list();
+	        		if(folderName.exists()){
+	            		for(String s: entries){
+	            		    File currentFile = new File(folderName.getPath(),s);
+	            		    currentFile.delete();
+	            		}
+	            		folderName.delete();
+	        		}                	
+                }
+                else if(got.getMessageType().equals("CHUNK"))
+                {
+                	String filename = "restore " + String.valueOf(got.getFileId()) + "\\" + "chunk" + got.getChunkNo() + ".part";
+	                OutputStream out = new BufferedOutputStream(new FileOutputStream(filename));
+                	try {                    
+	                    out.write(got.getBody());
+	                } 
+	                finally {
+	                	if (out != null) 
+	                		out.close();
+	                }
                 }
             }
             

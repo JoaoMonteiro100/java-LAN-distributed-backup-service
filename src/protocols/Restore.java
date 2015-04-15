@@ -36,13 +36,22 @@ public class Restore implements Runnable {
         	if( ((int) file.length() % CHUNK_SIZE ) > 0)
         		chunkNo += 1;
         	
-        	System.out.println(chunkNo);
+        	new File("restore " + fileID).mkdir();
         	
         	for(int j = 0; j < chunkNo; j++)
         	{
         		new Thread(new Getchunk(j, fileIDchar, sendingSocket)).start();
-	            Thread.sleep(500);
+	            Thread.sleep(200);
         	}
+        	
+        	while(new File("restore " + fileID).list().length != (new File(filename).length()/64000 + 1)){};
+        	
+        	try {
+				Main.join(fileID);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         	
         } catch (InterruptedException e) {
 			// TODO Auto-generated catch block
