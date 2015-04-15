@@ -88,10 +88,9 @@ public class Menu {
 		    return("REALLOCATE " + answer2.nextLine());
 	    }
 	    
-	  //if reallocate
+	  //if exit
 	    else if (choice == 'E' || choice == 'e') {
-		    System.exit(0);
-		    return("");
+		    return("EXIT");
 	    }
 	    
 	    //default
