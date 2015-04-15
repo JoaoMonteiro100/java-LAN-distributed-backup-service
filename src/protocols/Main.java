@@ -86,7 +86,7 @@ public class Main {
 	    	res.add(part);
     	}
 		System.out.println();
-		Backup.join(res);
+		Backup.join(res,file);
 	}
 
 	public static String getIp() {
