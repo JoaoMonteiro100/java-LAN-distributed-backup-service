@@ -51,7 +51,7 @@ public class Menu {
 	
 	public static String nextAction() {
 		Scanner answer = new Scanner( System.in );
-	    System.out.println("What do you want to do? Backup (B), Restore (R), Delete (D) or Reallocate space (S)?");
+	    System.out.println("What do you want to do? Backup (B), Restore (R), Delete (D), Reallocate space (S) or Exit (E)?");
 	    char choice = answer.next().charAt(0);
 	    
 	    //if backup
@@ -86,6 +86,11 @@ public class Menu {
 		    Scanner answer2 = new Scanner( System.in );
 		    System.out.println("How much space do you want to allocate in memory (in GB)?");
 		    return("REALLOCATE " + answer2.nextLine());
+	    }
+	    
+	  //if exit
+	    else if (choice == 'E' || choice == 'e') {
+		    return("EXIT");
 	    }
 	    
 	    //default

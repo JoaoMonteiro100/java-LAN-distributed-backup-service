@@ -66,6 +66,11 @@ public class Main {
 				//new Thread(new ReclaimSpace(Double.parseDouble(toDo[1]), sendingSocket)).start();
 				System.out.println("We're sorry, but the service you chose is not implemented. Choose another one!");
 			}
+			
+			//if it's an exit
+			else if(toDo[0].equals("EXIT")) {
+				System.exit(0);
+			}
 		}
 
 	}
