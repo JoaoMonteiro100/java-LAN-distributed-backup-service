@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 //pull all chunks from a file from other PCs to rebuild it
@@ -47,7 +48,7 @@ public class Restore implements Runnable {
         	while(new File("restore " + fileID).list().length != (new File(filename).length()/64000 + 1)){};
         	
         	try {
-				Main.join(fileID);
+				join(fileID);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -63,5 +64,19 @@ public class Restore implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void join(String file) throws IOException
+	{
+		List<byte[]> res = new ArrayList<byte[]>();
+		for(int i = 0; i < new File("restore " + file).listFiles().length; i++)
+		{
+			String filename = "restore " + file + "\\chunk" + i + ".part";
+			File fi = new File(filename);
+	    	byte[] part = Files.readAllBytes(fi.toPath());
+	    	res.add(part);
+    	}
+		System.out.println();
+		Backup.join(res);
 	}
 }
