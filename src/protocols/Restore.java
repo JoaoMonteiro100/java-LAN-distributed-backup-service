@@ -47,9 +47,15 @@ public class Restore implements Runnable {
         	
         	while(new File("restore " + fileID).list().length != (new File(filename).length()/64000 + 1)){};
         	System.out.println("POOTOTOT");
+
         	
         	try {
 				join(fileID);
+				
+				//register backup on text file - REPLICATIONS MISSING
+	        	FileManager fm = new FileManager();
+	    		fm.addRestore(fileIDchar, 3, 2, chunkNo);
+	    		
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

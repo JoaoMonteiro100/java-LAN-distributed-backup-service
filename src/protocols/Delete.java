@@ -38,6 +38,10 @@ public class Delete implements Runnable{
 	        	sendingSocket.send(msgPacket);
 	            Thread.sleep(500);
             }
+        	
+        	//register backup on text file
+        	FileManager fm = new FileManager();
+    		fm.removeBackup(filename);
             
         } catch (IOException ex) {
             ex.printStackTrace();

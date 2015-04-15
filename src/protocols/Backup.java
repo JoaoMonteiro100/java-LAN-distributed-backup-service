@@ -47,6 +47,10 @@ public class Backup implements Runnable{
         		Thread.sleep(500);
         	}
 
+        	//register backup on text file
+        	FileManager fm = new FileManager();
+    		fm.addBackup(filename, fileIDchar, replicationDegree, chunks.size());
+    		
         } catch (IOException | NoSuchAlgorithmException ex) {
             ex.printStackTrace();
         } catch (InterruptedException e) {
