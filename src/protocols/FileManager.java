@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -21,6 +22,21 @@ public class FileManager {
 	private String space = " ";
 	
 	public FileManager() throws UnsupportedEncodingException, FileNotFoundException, IOException {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+	              new FileOutputStream(backupDir), "utf-8"))) {
+		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + "\n");
+		}
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+	              new FileOutputStream(restoreDir), "utf-8"))) {
+		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + "\n");
+		}
+	}
+	
+	public FileManager(String bkpDir, String rstDir) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+		backupDir = bkpDir;
+		restoreDir = rstDir;
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
@@ -54,7 +70,7 @@ public class FileManager {
 			try(BufferedReader br = new BufferedReader(new FileReader(f))) {
 			    for(String line; (line = br.readLine()) != null; ) {
 			        String[] components = line.split(space);
-			        if(components[0].equals(file)) {
+			        if(components[0].trim().equals(file)) {
 			        	return true;
 			        }
 			    }
@@ -81,16 +97,92 @@ public class FileManager {
 		}
 	}
 	
-	public void removeBackup(String filename) {
-		
+	public void removeBackup(String filename) throws FileNotFoundException, IOException {
+		if(doesBackupExist(filename)) {
+			File inputFile = new File(backupDir);
+			File tempFile = new File("myTempFile.txt");
+
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+			String currentLine;
+
+			while((currentLine = reader.readLine()) != null) {
+			    String[] splitLine = currentLine.split(space);
+			    if(splitLine[0].trim().equals(filename)) continue;
+			    writer.write(currentLine + "\n");
+			}
+			
+			writer.close(); 
+			reader.close(); 
+			tempFile.renameTo(inputFile);
+		}
 	}
 	
-	public void removeRestore(char[] fileId) {
-		
+	public void removeRestore(char[] fileId) throws FileNotFoundException, IOException {
+		if(doesRestoreExist(fileId)) {
+			File inputFile = new File(restoreDir);
+			File tempFile = new File("myTempFile.txt");
+
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+			String currentLine;
+
+			while((currentLine = reader.readLine()) != null) {
+			    String[] splitLine = currentLine.split(space);
+			    if(splitLine[0].trim().equals(fileId.toString())) continue;
+			    writer.write(currentLine + "\n");
+			}
+			
+			writer.close(); 
+			reader.close(); 
+			tempFile.renameTo(inputFile);
+		}
 	}
 	
-	public void changeRepDegree(char[] fileId) {
-		
+	public void changeRepDegree(char[] fileId, int repDegree) throws FileNotFoundException, IOException {
+		if(doesRestoreExist(fileId)) {
+			File file = new File(restoreDir);
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String verify, putData;
+			
+			while((verify = br.readLine()) != null ){
+				if(verify != null){
+					String[] components = verify.split(space);
+					if(components[0].trim().equals(fileId.toString())) {
+						putData = verify.replaceAll(components[2], Integer.toString(repDegree));
+						bw.write(putData);
+					}
+				}
+			}
+			br.close();
+		}
+	}
+	
+	public void changeActualRepDegree(char[] fileId, int actualRepDegree) throws FileNotFoundException, IOException {
+		if(doesRestoreExist(fileId)) {
+			File file = new File(restoreDir);
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			String verify, putData;
+			
+			while((verify = br.readLine()) != null ){
+				if(verify != null){
+					String[] components = verify.split(space);
+					if(components[0].equals(fileId.toString())) {
+						putData = verify.replaceAll(components[1], Integer.toString(actualRepDegree));
+						bw.write(putData);
+					}
+				}
+			}
+			br.close();
+		}
 	}
 	
 	public String getBackupDir() {
