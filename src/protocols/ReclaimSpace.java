@@ -25,12 +25,16 @@ public class ReclaimSpace implements Runnable {
 	@Override
 	public void run() {
 		try {
+			
+			//SUPOSED TO BE RESTORE, NOT BACKUP
 			FileManager fm = new FileManager();
-			fm.removeBackup(fm.getBiggestBackup());
+			//fm.removeBackup(fm.getBiggestBackup());
 			
 			InetAddress addr = InetAddress.getByName(INET_ADDR_MC);
 			
-			Message msg = new Message("REMOVED", 1.0, null, 0);
+			//NOT WORKING
+			char[] empty = {'0','0'};
+			Message msg = new Message("REMOVED", 1.0, empty, 0);
         	byte [] pot = msg.getEntireMessage();
         	
         	DatagramPacket msgPacket = new DatagramPacket(pot,
