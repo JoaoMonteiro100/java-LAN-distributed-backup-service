@@ -15,7 +15,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//deals with .txt files that record backups and restores
+//deals with text files that record backups and restores
 public class FileManager {
 	private String backupDir = "backup.txt"; //contains info about backed up files
 	private String restoreDir = "restore.txt"; //contains info about chunks saved
@@ -23,21 +23,16 @@ public class FileManager {
 	private String newline = "\r\n";
 	
 	public FileManager() throws UnsupportedEncodingException, FileNotFoundException, IOException {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-		Date date = new Date();
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-	              new FileOutputStream(backupDir), "utf-8"))) {
-		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + newline);
-		}
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-	              new FileOutputStream(restoreDir), "utf-8"))) {
-		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + newline);
-		}
+		start();
 	}
 	
 	public FileManager(String bkpDir, String rstDir) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		backupDir = bkpDir;
 		restoreDir = rstDir;
+		start();
+	}
+	
+	public void start() throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
@@ -79,6 +74,26 @@ public class FileManager {
 		}
 		return false;
 	}
+	
+	public String getBiggestBackup() throws FileNotFoundException, IOException {
+		File f = new File(backupDir);
+		String filename = null;
+		int chunkNo = 0;
+		
+		if(f.exists() && !f.isDirectory()) {
+			try(BufferedReader br = new BufferedReader(new FileReader(f))) {
+			    for(String line; (line = br.readLine()) != null; ) {
+			        String[] components = line.split(space);
+			        if(Integer.parseInt(components[3].trim()) > chunkNo) {
+			        	filename = components[0].trim();
+			    		chunkNo = Integer.parseInt(components[3].trim());
+			        }
+			    }
+			}
+		}
+		String str = new String(filename);
+		return str;
+	}
 
 	public void addBackup(String filename, char[] fileId, int repDegree, int chunkNo) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		if(!doesBackupExist(filename)) {
@@ -92,7 +107,7 @@ public class FileManager {
 	public void addRestore(char[] fileId, int actualReplication, int repDegree, int chunkNo) throws FileNotFoundException, UnsupportedEncodingException, IOException {
 		if(!doesRestoreExist(fileId)) {
 			Writer output;
-			output = new BufferedWriter(new FileWriter(backupDir, true));
+			output = new BufferedWriter(new FileWriter(restoreDir, true));
 			output.append(fileId.toString() + space + Integer.toString(actualReplication) + space + Integer.toString(repDegree) + space + Integer.toString(chunkNo) + newline);
 			output.close();
 		}
@@ -111,7 +126,7 @@ public class FileManager {
 			while((currentLine = reader.readLine()) != null) {
 			    String[] splitLine = currentLine.split(space);
 			    if(splitLine[0].trim().equals(filename)) continue;
-			    writer.write(currentLine + "\n");
+			    writer.write(currentLine + newline);
 			}
 			
 			writer.close(); 
@@ -133,7 +148,7 @@ public class FileManager {
 			while((currentLine = reader.readLine()) != null) {
 			    String[] splitLine = currentLine.split(space);
 			    if(splitLine[0].trim().equals(fileId.toString())) continue;
-			    writer.write(currentLine + "\n");
+			    writer.write(currentLine + newline);
 			}
 			
 			writer.close(); 

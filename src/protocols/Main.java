@@ -63,8 +63,8 @@ public class Main {
 			
 			//if it's a reallocation of space
 			else if(toDo[0].equals("REALLOCATE")) {
-				//new Thread(new ReclaimSpace(Double.parseDouble(toDo[1]), sendingSocket)).start();
-				System.out.println("We're sorry, but the service you chose is not implemented. Choose another one!");
+				new Thread(new ReclaimSpace(Double.parseDouble(toDo[1]), sendingSocket)).start();
+				//System.out.println("We're sorry, but the service you chose is not implemented. Choose another one!");
 			}
 			
 			//if it's an exit
