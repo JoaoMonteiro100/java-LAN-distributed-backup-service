@@ -20,17 +20,18 @@ public class FileManager {
 	private String backupDir = "backup.txt"; //contains info about backed up files
 	private String restoreDir = "restore.txt"; //contains info about chunks saved
 	private String space = " ";
+	private String newline = "\r\n";
 	
 	public FileManager() throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Date date = new Date();
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 	              new FileOutputStream(backupDir), "utf-8"))) {
-		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + "\n");
+		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + newline);
 		}
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 	              new FileOutputStream(restoreDir), "utf-8"))) {
-		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + "\n");
+		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + newline);
 		}
 	}
 	
@@ -41,11 +42,11 @@ public class FileManager {
 		Date date = new Date();
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 	              new FileOutputStream(backupDir), "utf-8"))) {
-		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + "\n");
+		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + newline);
 		}
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
 	              new FileOutputStream(restoreDir), "utf-8"))) {
-		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + "\n");
+		   writer.write("NEW SERVICE STARTED AT " + dateFormat.format(date) + newline);
 		}
 	}
 	
@@ -81,19 +82,19 @@ public class FileManager {
 
 	public void addBackup(String filename, char[] fileId, int repDegree, int chunkNo) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		if(!doesBackupExist(filename)) {
-			try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-		              new FileOutputStream(backupDir), "utf-8"))) {
-			   writer.write(filename + space + fileId.toString() + space + Integer.toString(repDegree) + space + Integer.toString(chunkNo));
-			}
+			Writer output;
+			output = new BufferedWriter(new FileWriter(backupDir, true));
+			output.append(filename + space + fileId.toString() + space + Integer.toString(repDegree) + space + Integer.toString(chunkNo) + newline);
+			output.close();
 		}
 	}
 	
 	public void addRestore(char[] fileId, int actualReplication, int repDegree, int chunkNo) throws FileNotFoundException, UnsupportedEncodingException, IOException {
 		if(!doesRestoreExist(fileId)) {
-			try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-		              new FileOutputStream(backupDir), "utf-8"))) {
-			   writer.write(fileId.toString() + space + Integer.toString(actualReplication) + space + Integer.toString(repDegree) + space + Integer.toString(chunkNo));
-			}
+			Writer output;
+			output = new BufferedWriter(new FileWriter(backupDir, true));
+			output.append(fileId.toString() + space + Integer.toString(actualReplication) + space + Integer.toString(repDegree) + space + Integer.toString(chunkNo) + newline);
+			output.close();
 		}
 	}
 	
